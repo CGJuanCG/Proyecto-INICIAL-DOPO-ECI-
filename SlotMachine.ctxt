@@ -1,7 +1,13 @@
 #BlueJ class context
-#Fri Aug 21 01:21:32 COT 2026
+#Fri Aug 21 11:00:25 COT 2026
 comment0.target=SlotMachine
-comment0.text=\r\n Write a description of class SlotMachine here.\r\n\r\n @author (your name)\r\n @version (a version number or a date)\r\n
+comment0.text=\r\n Representa una m\u00E1quina tragamonedas (slot machine), compuesta por varias\r\n ruedas (Wheel). Permite crear la m\u00E1quina, agregar y eliminar ruedas,\r\n respetando las reglas de posici\u00F3n definidas en el enunciado.\r\n\r\n @author (tu nombre)\r\n @version (fecha)\r\n
 comment1.target=SlotMachine()
-comment1.text=\r\n Constructor for objects of class SlotMachine\r\n
-numComments=2
+comment1.text=\r\n Crea una m\u00E1quina tragamonedas sin ruedas, visible por defecto.\r\n
+comment2.params=pos
+comment2.target=void addWheel(int)
+comment2.text=\r\n Agrega una rueda nueva en la posici\u00F3n indicada.\r\n Si pos es menor a 1, se usa la posici\u00F3n 1.\r\n Si pos es mayor al m\u00E1ximo posible, se usa el m\u00E1ximo (al final de la lista).\r\n\r\n @param pos posici\u00F3n (empezando en 1) donde insertar la rueda nueva\r\n
+comment3.params=pos
+comment3.target=void delWheel(int)
+comment3.text=\r\n Elimina la rueda en la posici\u00F3n indicada.\r\n Si pos es menor a 1, se usa la posici\u00F3n 1.\r\n Si pos es mayor al m\u00E1ximo existente, se usa el m\u00E1ximo.\r\n Si no hay ruedas, la operaci\u00F3n falla (lastMove queda en false).\r\n\r\n @param pos posici\u00F3n (empezando en 1) de la rueda a eliminar\r\n
+numComments=4
