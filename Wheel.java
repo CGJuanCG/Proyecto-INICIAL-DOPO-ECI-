@@ -28,7 +28,7 @@ public class Wheel
      */
     private void rotateOnce(){
         Symbol temp = symbols.removeFirst();
-        symbols.addFirst(temp);
+        symbols.addLast(temp);
     }
     
     /**
