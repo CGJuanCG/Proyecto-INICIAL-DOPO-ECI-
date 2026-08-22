@@ -1,16 +1,15 @@
 import java.util.ArrayList;
-
+import javax.swing.JOptionPane;
 /**
  * Representa una máquina tragamonedas (slot machine), compuesta por varias
- * ruedas (Wheel). Permite crear la máquina, agregar y eliminar ruedas,
- * respetando las reglas de posición definidas en el enunciado.
+ * ruedas (Wheel).
  *
- * @author (tu nombre)
- * @version (fecha)
+ * @author (Juan Diego Castaño Parra)
+ * @version (21-08-2026)
  */
 public class SlotMachine
 {
-    private ArrayList<Wheel> wheels;
+    private List<Wheel> wheels;
     private boolean isVisible;
     private boolean lastMove;
 
@@ -67,6 +66,28 @@ public class SlotMachine
             int indice = pos - 1;
             wheels.remove(indice);
             lastMove = true;
+        }
+    }
+    
+    /**
+     * Hace girar la rueda en la posición especifica i de la maquina tragamonedas
+     */
+    public void spin (int wheel){
+        if (wheel < 1 || wheel > wheels.size()){
+            JOptionPane.showMessageDialog(null, "Indice de rueda invalido");
+            lastMove = false;
+            return;
+        }
+        wheels.get(wheel - 1).spin();
+        lastMove = true;
+    }
+    
+    /**
+     * Hace girar todas las ruedas de la maquina
+     */
+    public void spin(){
+        for (int i = 0; i <= wheels.size(); i++){
+            spin(i);
         }
     }
 }
