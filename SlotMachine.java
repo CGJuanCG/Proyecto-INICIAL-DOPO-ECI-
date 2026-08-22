@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
  */
 public class SlotMachine
 {
-    private ArrayList<Wheel> wheels;
+    private List<Wheel> wheels;
     private boolean isVisible;
     private boolean lastMove;
 
