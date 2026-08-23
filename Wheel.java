@@ -1,5 +1,5 @@
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -11,24 +11,26 @@ import java.util.Random;
  */
 public class Wheel
 {
-    private Deque<Symbol> symbols;
+    private List<Symbol> symbols;
     private Random randomSpin;
+    private int offset;
     
     
     /**
      * Crea una nueva rueda
      */
     public Wheel(){
-        symbols = new LinkedList<>();
+        symbols = new ArrayList<>();
         randomSpin = new Random ();
+        offset = 0;
     }
     
     /**
      * Hace girar la rueda una única rueda
      */
     private void rotateOnce(){
-        Symbol temp = symbols.removeFirst();
-        symbols.addLast(temp);
+        offset=(offset+1)%(symbols.size());        
+
     }
     
     /**
@@ -40,5 +42,14 @@ public class Wheel
         for (int i = 0; i < n; i++){
             rotateOnce();
         }
+    }
+    
+    /**
+     * Ubica el offset en el simbolo(indice)
+     * 
+     * @param String symbol es el simbolo que se quiere ubicar
+     */
+    public void placeSymbol(String symbol){
+        offset = symbols.indexOf(symbol);
     }
 }
