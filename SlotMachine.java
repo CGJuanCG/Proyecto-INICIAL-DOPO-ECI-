@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 /**
  * Representa una máquina tragamonedas (slot machine), compuesta por varias
  * ruedas (Wheel).
  *
- * @author (Juan Diego Castaño Parra)
- * @version (21-08-2026)
+ * @author (Juan Diego Castaño Parra - Juan Diego Carreño)
+ * @version (22-08-2026)
  */
 public class SlotMachine
 {
@@ -55,15 +56,10 @@ public class SlotMachine
     {
         if (wheels.isEmpty()) {
             lastMove = false;
+            JOptionPane.showMessageDialog(null,"La lista de ruedas esta vacia,por favor cree una rueda e intente nuevamente");
         }
         else {
-            if (pos < 1) {
-                pos = 1;
-            }
-            if (pos > wheels.size()) {
-                pos = wheels.size();
-            }
-            int indice = pos - 1;
+            int indice = ajustar(pos) - 1;
             wheels.remove(indice);
             lastMove = true;
         }
@@ -73,21 +69,64 @@ public class SlotMachine
      * Hace girar la rueda en la posición especifica i de la maquina tragamonedas
      */
     public void spin (int wheel){
-        if (wheel < 1 || wheel > wheels.size()){
-            JOptionPane.showMessageDialog(null, "Indice de rueda invalido");
+        if (wheels.isEmpty()){
             lastMove = false;
-            return;
+            JOptionPane.showMessageDialog(null,"La lista de ruedas esta vacia,por favor cree una rueda e intente nuevamente");
         }
-        wheels.get(wheel - 1).spin();
-        lastMove = true;
-    }
+        else{
+            wheels.get(ajustar(wheel) - 1).spin();
+            lastMove = true;
+            }
+        }
     
     /**
      * Hace girar todas las ruedas de la maquina
      */
     public void spin(){
-        for (int i = 0; i <= wheels.size(); i++){
-            spin(i);
+        if (wheels.isEmpty()){
+            lastMove = false;
+            JOptionPane.showMessageDialog(null,"La lista de ruedas esta vacia,por favor cree una rueda e intente nuevamente");
+        }
+        else{
+            for (Wheel w: wheels){
+                w.spin();
+                lastMove = true;
+            }
         }
     }
-}
+    
+    /**
+     *  Ubica el ofsett (se muestra en la pantalla) en el simbolo deseado en la rueda deseada 
+     *  
+     *  @param int wheel es el indice de la rueda deseada
+     *  @param String symbol es el simbolo deseado
+     */
+    public void placeSymbol(int wheel,String symbol){
+        if (wheels.isEmpty()){
+            lastMove = false;
+            JOptionPane.showMessageDialog(null,"La lista de ruedas esta vacia,por favor cree una rueda e intente nuevamente");
+        }
+        else{
+            wheels.get(ajustar(wheel)-1).placeSymbol(symbol);
+            lastMove = true;
+        }
+    }
+
+    /**
+     * Metodo privado que valida que no se pase del maximo de la lista
+     * o del minimo de la lista (si la posicion es menor a 1, se usa la posicion 1
+     * si la posicion es mayor al maximo numero de elementos, se usa el maximo)
+     * 
+     * @param int pos es el numero a verificar
+     */
+    
+    private int ajustar(int pos){
+        if (pos<1){
+            return 1;
+        }
+        if (pos>wheels.size()){
+            return wheels.size();
+        }
+        return pos;
+        }
+    }
