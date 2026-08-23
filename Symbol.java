@@ -1,58 +1,66 @@
-
 /**
- * Representa el simbolo (symbol) adentro de la rueda, un simbolo es diferente si su color cambia
- * incluso si poseen la misma forma.
- *
- * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
- * @version 22-08-2026
- */
-public class Symbol{
-    
+* Representa un símbolo de la máquina tragamonedas. Un símbolo se identifica
+* únicamente por su color, expresado con un nombre del estándar CSS: dos
+* símbolos son iguales si y sólo si comparten el color.
+*
+* @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
+* @version 23-08-2026
+*/
+public class Symbol
+{
     private String color;
-    private Rectangle figura;
-    
+ 
     /**
-     * Constructor de clase Symbol
-     * @param color es el color CSS que identifica al simbolo
+     * Crea un símbolo del color indicado.
+     *
+     * @param color nombre CSS del color que identifica al símbolo
      */
-    public Symbol(String color){
-        this.color = color.toLowerCase();
+    public Symbol(String color)
+    {
+        this.color = color;
     }
-    
+ 
     /**
-     * Metodo get para que otras clases puedan acceder a el de manera controlada
-     * @return retorna el color
+     * Entrega el color que identifica al símbolo.
+     *
+     * @return el nombre CSS del color
      */
-    public String getColor(){
+    public String getColor()
+    {
         return color;
     }
-    
+ 
     /**
-     * Se redefine el metodo equals de la clase padre Object, para que compare si los 2 colores son iguales ("red" igual a "red")
-     * Tuvo que redefinirse debido a que equals de una clase compara en memoria y no contenido debido a su clase padre Object
-     * @param o es el objeto al que se quiere verificar si es igual para luego hacer el casteo de la clase correspondiente
-     * @return Retorna booleano, para identificar si es el mismo color o no
+     * Compara este símbolo con otro objeto. Dos símbolos son iguales cuando
+     * tienen el mismo color, aunque sean objetos distintos.
+     *
+     * @param o el objeto con el que se compara
+     * @return true si o es un símbolo del mismo color
      */
     @Override
-    public boolean equals(Object o){
-        if (this == o){
+    public boolean equals(Object o)
+    {
+        if (this == o) {
             return true;
         }
-        if (o == null || this.getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Symbol otro = (Symbol) o;
         return color.equals(otro.color);
     }
-    
-    
+ 
     /**
-     * Se redefine el metodo hashCode de la clase padre Object, ya que si se redefine equals se debe redefinir hashCode
-     * lo que hace es retornar un numero de referencia para su busqueda, si son el mismo objeto, tienen el mismo hashCode
-     * @return retorna un entero
+     * Calcula el código hash a partir del color, de modo que dos símbolos
+     * iguales produzcan siempre el mismo valor. El hash indica en qué grupo
+     * buscar dentro de las colecciones basadas en tablas hash; la igualdad la
+     * decide equals dentro de ese grupo.
+     *
+     * @return el código hash del símbolo
      */
     @Override
-    public int hashCode(){
+    public int hashCode()
+    {
         return color.hashCode();
     }
 }
