@@ -13,6 +13,7 @@ public class SlotMachine
     private List<Wheel> wheels;
     private boolean isVisible;
     private boolean lastMove;
+    private Cinta cinta;
 
     /**
      * Crea una máquina tragamonedas sin ruedas, visible por defecto.
