@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class Cinta here.
  * 
- * @author (Juan Diego Carreño Gutierrez) 
+ * @author (Juan Diego Carreño Gutierrez - Juan Diego Castaño Parra) 
  * @version (22/08/2026)
  */
 public class Cinta
