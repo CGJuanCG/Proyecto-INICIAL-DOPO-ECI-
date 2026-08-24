@@ -5,15 +5,16 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 /**
- * Representa una máquina tragamonedas. La máquina está compuesta por varias
- * ruedas y una única cinta de símbolos que todas ellas comparten: agregar o
- * eliminar un símbolo afecta a la máquina completa, mientras que girar afecta
- * sólo a la rueda indicada.
+ * A slot machine.
  *
- * Hacia afuera las posiciones se numeran desde 1 y los símbolos se identifican
- * por su color; la traducción a los índices y objetos internos ocurre en esta
- * clase. La máquina también reparte el espacio de la pantalla entre sus ruedas
- * y coordina el repintado después de cada operación.
+ * The machine is made of several wheels and one strip of symbols that all of
+ * them share. Adding or removing a symbol changes the whole machine, while
+ * spinning changes only the wheel you asked for.
+ *
+ * From the outside, places are counted from 1 and symbols are named by their
+ * color. Turning that into the places and objects used inside is the job of
+ * this class. The machine also shares out the screen between its wheels and
+ * repaints everything after each move.
  *
  * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
  * @version 23-08-2026
@@ -38,8 +39,8 @@ public class SlotMachine
     private boolean lastMove;
 
     /**
-     * Crea una máquina tragamonedas sin ruedas y sin símbolos. La máquina
-     * queda visible, pero no se dibuja nada hasta que tenga ruedas.
+     * Makes a machine with no wheels and no symbols. The machine starts on
+     * screen, but nothing is painted until it has wheels.
      */
     public SlotMachine()
     {
@@ -53,10 +54,10 @@ public class SlotMachine
     }
 
     /**
-     * Agrega una rueda nueva en la posición indicada, desplazando las
-     * siguientes. Las posiciones fuera de rango se ajustan al extremo.
+     * Adds a new wheel at the place you ask for and pushes the following ones
+     * along. Places outside the range are moved to the nearest end.
      *
-     * @param pos posición donde se inserta la rueda, empezando en 1
+     * @param pos where the new wheel goes, counting from 1
      */
     public void addWheel(int pos)
     {
@@ -67,10 +68,11 @@ public class SlotMachine
     }
 
     /**
-     * Elimina la rueda que ocupa la posición indicada. Las posiciones fuera de
-     * rango se ajustan al extremo. La operación falla si no hay ruedas.
+     * Removes the wheel sitting at the place you ask for. Places outside the
+     * range are moved to the nearest end. Nothing happens when the machine has
+     * no wheels.
      *
-     * @param pos posición de la rueda que se elimina, empezando en 1
+     * @param pos which wheel to remove, counting from 1
      */
     public void delWheel(int pos)
     {
@@ -85,11 +87,11 @@ public class SlotMachine
     }
 
     /**
-     * Agrega a la cinta un símbolo del color indicado, en la posición dada.
-     * La operación falla si ya existe un símbolo de ese color.
+     * Adds a symbol of the given color to the strip, at the place you ask for.
+     * Nothing happens when the machine already has a symbol of that color.
      *
-     * @param pos posición donde se inserta el símbolo, empezando en 1
-     * @param color nombre CSS del color del nuevo símbolo
+     * @param pos where the new symbol goes, counting from 1
+     * @param color the CSS name of the color
      */
     public void addSymbol(int pos, String color)
     {
@@ -104,10 +106,10 @@ public class SlotMachine
     }
 
     /**
-     * Elimina de la cinta el símbolo del color indicado. La operación falla si
-     * no hay ningún símbolo de ese color.
+     * Removes the symbol of the given color from the strip. Nothing happens
+     * when there is no symbol of that color.
      *
-     * @param symbol nombre CSS del color del símbolo que se elimina
+     * @param symbol the CSS name of the color to remove
      */
     public void delSymbol(String symbol)
     {
@@ -121,12 +123,12 @@ public class SlotMachine
     }
 
     /**
-     * Ubica la rueda indicada en el símbolo del color dado, de modo que ese
-     * símbolo quede visible. La operación falla si no hay ruedas o si el color
-     * no está en la cinta.
+     * Turns a wheel until the symbol of the given color is the one showing.
+     * Nothing happens when the machine has no wheels, or when that color is not
+     * on the strip.
      *
-     * @param wheel posición de la rueda, empezando en 1
-     * @param symbol nombre CSS del color que debe quedar visible
+     * @param wheel which wheel to turn, counting from 1
+     * @param symbol the CSS name of the color that should end up showing
      */
     public void placeSymbol(int wheel, String symbol)
     {
@@ -145,10 +147,10 @@ public class SlotMachine
     }
 
     /**
-     * Hace girar la rueda indicada una cantidad aleatoria de posiciones. La
-     * operación falla si la máquina no tiene ruedas.
+     * Spins one wheel by a random amount. Nothing happens when the machine has
+     * no wheels.
      *
-     * @param wheel posición de la rueda que gira, empezando en 1
+     * @param wheel which wheel to spin, counting from 1
      */
     public void spin(int wheel)
     {
@@ -162,8 +164,8 @@ public class SlotMachine
     }
 
     /**
-     * Hace girar todas las ruedas de la máquina. La operación falla si la
-     * máquina no tiene ruedas.
+     * Spins every wheel of the machine. Nothing happens when the machine has no
+     * wheels.
      */
     public void spin()
     {
@@ -179,10 +181,10 @@ public class SlotMachine
     }
 
     /**
-     * Entrega los colores de todos los símbolos de la cinta, en el orden en
-     * que están, empezando por el primero.
+     * Gives back the colors of all the symbols on the strip, in the order they
+     * sit, starting with the first one.
      *
-     * @return los colores de los símbolos de la máquina
+     * @return the colors of the symbols of the machine
      */
     public String[] symbols()
     {
@@ -195,10 +197,10 @@ public class SlotMachine
     }
 
     /**
-     * Entrega los colores de los símbolos visibles en las ruedas, ordenados de
-     * izquierda a derecha.
+     * Gives back the colors showing in the windows of the wheels, read from
+     * left to right.
      *
-     * @return los colores visibles, con null donde la cinta esté vacía
+     * @return the colors on view, with null wherever the strip is empty
      */
     public String[] configuration()
     {
@@ -214,9 +216,9 @@ public class SlotMachine
     }
 
     /**
-     * Cuenta cuántos colores diferentes se ven en la configuración actual.
+     * Counts how many different colors are showing right now.
      *
-     * @return la cantidad de símbolos distintos visibles
+     * @return how many different symbols are on view
      */
     public int distinctSymbols()
     {
@@ -225,10 +227,10 @@ public class SlotMachine
     }
 
     /**
-     * Indica si la configuración actual es ganadora, es decir, si todas las
-     * ruedas muestran el mismo símbolo.
+     * Says whether the machine has won, that is, whether every wheel is showing
+     * the same symbol.
      *
-     * @return true si la máquina está en un estado ganador
+     * @return true when the machine is in a winning state
      */
     public boolean isJackpot()
     {
@@ -237,7 +239,7 @@ public class SlotMachine
     }
 
     /**
-     * Hace visible el simulador y pinta su estado actual.
+     * Puts the machine on screen and paints how it looks right now.
      */
     public void makeVisible()
     {
@@ -247,8 +249,8 @@ public class SlotMachine
     }
 
     /**
-     * Hace invisible el simulador. En este estado no se dibuja nada ni se
-     * muestran mensajes, de modo que la máquina puede usarse sin interfaz.
+     * Takes the machine off the screen. While it is hidden nothing is painted
+     * and no messages pop up, so the machine can be used without any window.
      */
     public void makeInvisible()
     {
@@ -261,7 +263,7 @@ public class SlotMachine
     }
 
     /**
-     * Termina el simulador.
+     * Closes the simulator.
      */
     public void exit()
     {
@@ -269,9 +271,9 @@ public class SlotMachine
     }
 
     /**
-     * Indica si la última operación solicitada se pudo realizar.
+     * Says whether the last thing you asked for could be done.
      *
-     * @return true si la última operación tuvo éxito
+     * @return true when the last move worked
      */
     public boolean ok()
     {
@@ -279,12 +281,12 @@ public class SlotMachine
     }
 
     /**
-     * Ajusta una posición al rango válido: las menores a 1 se llevan a 1 y las
-     * mayores al máximo se llevan al máximo.
+     * Moves a place into the range that makes sense: anything below 1 becomes
+     * 1, and anything above the top becomes the top.
      *
-     * @param pos posición solicitada
-     * @param max posición más alta admitida
-     * @return la posición ya ajustada al rango
+     * @param pos the place that was asked for
+     * @param max the highest place allowed
+     * @return the place once it fits in the range
      */
     private int ajustar(int pos, int max)
     {
@@ -298,10 +300,10 @@ public class SlotMachine
     }
 
     /**
-     * Registra que la última operación falló y avisa al usuario, únicamente
-     * si el simulador está visible.
+     * Notes that the last move did not work, and tells the user why, but only
+     * while the machine is on screen.
      *
-     * @param mensaje explicación de por qué falló la operación
+     * @param mensaje what went wrong
      */
     private void fallo(String mensaje)
     {
@@ -312,8 +314,8 @@ public class SlotMachine
     }
 
     /**
-     * Reajusta la posición de todas las ruedas después de que la cinta cambie
-     * de tamaño, para que ninguna quede fuera de rango.
+     * Moves every wheel back into a place that still exists, after the strip
+     * has grown or shrunk.
      */
     private void normalizarRuedas()
     {
@@ -323,9 +325,9 @@ public class SlotMachine
     }
 
     /**
-     * Cuenta los colores diferentes visibles sin alterar el resultado de ok().
+     * Counts the different colors on view without changing what ok() will say.
      *
-     * @return la cantidad de colores distintos en las ventanas de las ruedas
+     * @return how many different colors are showing in the windows
      */
     private int contarDistintos()
     {
@@ -338,9 +340,10 @@ public class SlotMachine
     }
 
     /**
-     * Determina si la máquina está en estado ganador sin alterar ok().
+     * Works out whether the machine has won, without changing what ok() will
+     * say.
      *
-     * @return true si todas las ruedas muestran el mismo símbolo
+     * @return true when every wheel shows the same symbol
      */
     private boolean esGanadora()
     {
@@ -351,9 +354,9 @@ public class SlotMachine
     }
 
     /**
-     * Reparte el ancho disponible entre las ruedas y le asigna a cada una el
-     * lugar que ocupa en la pantalla. Se recalcula cada vez que cambia el
-     * número de ruedas.
+     * Shares out the width available between the wheels and tells each one
+     * where it sits. It is worked out again every time the number of wheels
+     * changes.
      */
     private void ubicarRuedas()
     {
@@ -376,9 +379,9 @@ public class SlotMachine
     }
 
     /**
-     * Vuelve a pintar la máquina completa: reubica las ruedas, pinta el cuerpo
-     * con el aspecto que corresponda al estado, y encima cada una de las
-     * ruedas. No hace nada si el simulador está invisible.
+     * Paints the whole machine again: it places the wheels, paints the body in
+     * the color that matches the state, and then paints each wheel on top. It
+     * does nothing while the machine is hidden.
      */
     private void draw()
     {
