@@ -2,11 +2,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Representa la cinta de una máquina tragamonedas: la secuencia ordenada de
- * símbolos que todas las ruedas comparten. No se admiten dos símbolos iguales.
+ * The strip of symbols of a slot machine.
  *
- * Las posiciones se manejan como índices desde 0. Traducir desde las posiciones
- * desde 1 que usa el usuario es responsabilidad de SlotMachine.
+ * Every wheel of the machine looks at this same strip, so there is only one of
+ * them. The strip keeps its symbols in order and never holds two symbols of the
+ * same color.
+ *
+ * Places are counted from 0, like any list in Java. Turning that into the
+ * numbers the user types, which start at 1, is the job of SlotMachine.
  *
  * @author Juan Diego Carreño Gutierrez - Juan Diego Castaño Parra
  * @version 23/08/2026
@@ -16,7 +19,7 @@ public class Cinta
     private List<Symbol> symbols;
 
     /**
-     * Crea una cinta sin símbolos.
+     * Makes an empty strip.
      */
     public Cinta()
     {
@@ -24,9 +27,9 @@ public class Cinta
     }
 
     /**
-     * Indica cuántos símbolos tiene la cinta.
+     * Says how many symbols the strip has.
      *
-     * @return la cantidad de símbolos de la cinta
+     * @return how many symbols there are
      */
     public int size()
     {
@@ -34,10 +37,10 @@ public class Cinta
     }
 
     /**
-     * Entrega el símbolo que ocupa el índice indicado.
+     * Gives back the symbol sitting in a given place.
      *
-     * @param index índice del símbolo, entre 0 y size()-1
-     * @return el símbolo en esa posición, o null si el índice está fuera de rango
+     * @param index the place to look at, from 0 to size()-1
+     * @return the symbol in that place, or null when the place does not exist
      */
     public Symbol symbolAt(int index)
     {
@@ -48,10 +51,10 @@ public class Cinta
     }
 
     /**
-     * Busca la posición que ocupa un símbolo dentro de la cinta.
+     * Looks for a symbol and says where it is.
      *
-     * @param symbol el símbolo buscado
-     * @return el índice del símbolo, o -1 si no está en la cinta
+     * @param symbol the symbol to look for
+     * @return the place where it sits, or -1 when it is not on the strip
      */
     public int positionOf(Symbol symbol)
     {
@@ -59,10 +62,10 @@ public class Cinta
     }
 
     /**
-     * Indica si la cinta ya contiene un símbolo igual al dado.
+     * Says whether the strip already has a symbol like this one.
      *
-     * @param symbol el símbolo buscado
-     * @return true si el símbolo ya está en la cinta
+     * @param symbol the symbol to look for
+     * @return true when it is already on the strip
      */
     public boolean contains(Symbol symbol)
     {
@@ -70,12 +73,13 @@ public class Cinta
     }
 
     /**
-     * Inserta un símbolo en el índice indicado, desplazando los siguientes.
-     * Falla si el símbolo ya está en la cinta o si el índice está fuera de rango.
+     * Puts a symbol into a given place and pushes the following ones along.
+     * Nothing happens when the strip already has that color, or when the place
+     * does not exist.
      *
-     * @param index índice donde insertar, entre 0 y size()
-     * @param symbol el símbolo que se agrega
-     * @return true si el símbolo se agregó
+     * @param index the place to put it in, from 0 to size()
+     * @param symbol the symbol to add
+     * @return true when the symbol was added
      */
     public boolean addSymbol(int index, Symbol symbol)
     {
@@ -90,10 +94,10 @@ public class Cinta
     }
 
     /**
-     * Elimina de la cinta el símbolo igual al dado.
+     * Takes a symbol off the strip.
      *
-     * @param symbol el símbolo que se elimina
-     * @return true si el símbolo estaba en la cinta y fue eliminado
+     * @param symbol the symbol to remove
+     * @return true when it was on the strip and got removed
      */
     public boolean delSymbol(Symbol symbol)
     {
