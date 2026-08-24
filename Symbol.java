@@ -1,41 +1,44 @@
 /**
-* Representa un símbolo de la máquina tragamonedas. Un símbolo se identifica
-* únicamente por su color, expresado con un nombre del estándar CSS: dos
-* símbolos son iguales si y sólo si comparten el color.
-*
-* @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
-* @version 23-08-2026
-*/
+ * A symbol of the slot machine.
+ *
+ * A symbol is just a color, written the way CSS writes colors: "red", "blue",
+ * "green". Two symbols are the same thing when they have the same color, even
+ * if they were created separately.
+ *
+ * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
+ * @version 23-08-2026
+ */
 public class Symbol
 {
     private String color;
- 
+
     /**
-     * Crea un símbolo del color indicado.
+     * Makes a symbol of the given color.
      *
-     * @param color nombre CSS del color que identifica al símbolo
+     * @param color the CSS name of the color
      */
     public Symbol(String color)
     {
         this.color = color;
     }
- 
+
     /**
-     * Entrega el color que identifica al símbolo.
+     * Gives back the color of this symbol.
      *
-     * @return el nombre CSS del color
+     * @return the CSS name of the color
      */
     public String getColor()
     {
         return color;
     }
- 
+
     /**
-     * Compara este símbolo con otro objeto. Dos símbolos son iguales cuando
-     * tienen el mismo color, aunque sean objetos distintos.
+     * Says whether this symbol is the same as something else. Two symbols
+     * match when their colors match. Anything that is not a symbol never
+     * matches.
      *
-     * @param o el objeto con el que se compara
-     * @return true si o es un símbolo del mismo color
+     * @param o the object to compare with
+     * @return true when the other object is a symbol of the same color
      */
     @Override
     public boolean equals(Object o)
@@ -49,14 +52,13 @@ public class Symbol
         Symbol otro = (Symbol) o;
         return color.equals(otro.color);
     }
- 
+
     /**
-     * Calcula el código hash a partir del color, de modo que dos símbolos
-     * iguales produzcan siempre el mismo valor. El hash indica en qué grupo
-     * buscar dentro de las colecciones basadas en tablas hash; la igualdad la
-     * decide equals dentro de ese grupo.
+     * Gives back a number built from the color. Two symbols of the same color
+     * always give the same number, which is what lists and sets need in order
+     * to find a symbol.
      *
-     * @return el código hash del símbolo
+     * @return a number that stands for this symbol
      */
     @Override
     public int hashCode()
