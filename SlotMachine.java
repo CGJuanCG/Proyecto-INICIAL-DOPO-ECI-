@@ -298,6 +298,25 @@ public class SlotMachine
         }
         return pos;
     }
+    
+    /**
+     * Swap the position between 2 wheels in the machine.
+     * @param int wheel1 index of wheel #1
+     * @param int wheel2 index of wheel #2
+     */
+    public void swap(int Wheel1, int Wheel2){
+        if (Wheel1 < 0 || Wheel1 >= wheels.size() || Wheel2 < 0 || Wheel2 >= wheels.size()){
+            fallo("Indice de rueda invalido");
+            lastMove = false;
+            return;
+        } 
+        
+        Wheel temp = wheels.get(Wheel1);
+        wheels.set(Wheel1, wheels.get(Wheel2));
+        wheels.set(Wheel2, temp);
+        
+        lastMove = true;
+    }
 
     /**
      * Notes that the last move did not work, and tells the user why, but only
