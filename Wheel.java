@@ -23,6 +23,7 @@ public class Wheel
     private Rectangle marco;
     private Rectangle vista;
     private boolean isVisible;
+    private boolean isFixed;
 
     /**
      * Makes a wheel that looks at the given strip, stopped at its first symbol.
@@ -180,4 +181,26 @@ public class Wheel
             vista.makeVisible();
         }
     }
+    
+    /**
+     * Set the wheel to a fixed state
+     */
+    public void setFixedWheel(){
+        isFixed = true;
+    }
+    
+    /**
+     * Set the wheel to a non-fixed state
+     */
+    public void setNonFixedWheel(){
+        isFixed = false;
+    }
+    
+    /**
+     * Indicates whether the wheel is fixed or not
+     */
+    public boolean isFixed(){
+        return isFixed;
+    }
+    
 }

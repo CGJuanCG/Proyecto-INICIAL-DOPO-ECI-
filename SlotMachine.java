@@ -304,19 +304,37 @@ public class SlotMachine
      * @param int wheel1 index of wheel #1
      * @param int wheel2 index of wheel #2
      */
-    public void swap(int Wheel1, int Wheel2){
-        if (Wheel1 < 0 || Wheel1 >= wheels.size() || Wheel2 < 0 || Wheel2 >= wheels.size()){
+    public void swap(int wheel1, int wheel2){
+        if (wheel1 < 0 || wheel1 >= wheels.size() || wheel2 < 0 || wheel2 >= wheels.size()){
             fallo("Indice de rueda invalido");
             lastMove = false;
             return;
         } 
         
-        Wheel temp = wheels.get(Wheel1);
-        wheels.set(Wheel1, wheels.get(Wheel2));
-        wheels.set(Wheel2, temp);
+        Wheel temp = wheels.get(wheel1);
+        wheels.set(wheel1, wheels.get(wheel2));
+        wheels.set(wheel2, temp);
         
         lastMove = true;
     }
+    
+    /**
+     * locks a  wheel so that it cannot spin.
+     * @param int wheel index of the wheel that user wants to block.
+     */
+    public void lock(int wheel){
+        wheels.get(wheel).setFixedWheel();
+    }
+    
+    /**
+     * unlocks a wheel so that it can spin.
+     * @param int wheel index of the wheel that user wants to unlock.
+     */
+    public void unlock(int wheel){
+        wheels.get(wheel).setNonFixedWheel();
+    }
+    
+    
 
     /**
      * Notes that the last move did not work, and tells the user why, but only
