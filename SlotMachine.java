@@ -388,6 +388,39 @@ public class SlotMachine
     }
     
     /**
+     * Leaves each wheel showing the color that corresponds to it, in the same
+     * order the wheels are in. Nothing changes when the number of colors does
+     * not match the number of wheels, or when any of those colors is not on
+     * the strip: either the whole configuration is applied, or none of it is.
+     *
+     * @param setSymbols the colors that should end up showing, one per wheel
+     */
+    public void spin(String[] setSymbols)
+    {
+        if (wheels.isEmpty()) {
+            fallo("La máquina no tiene ruedas.");
+            return;
+        }
+        if (setSymbols == null || setSymbols.length != wheels.size()) {
+            fallo("La cantidad de colores no coincide con la cantidad de ruedas.");
+            return;
+        }
+        int[] indices = new int[setSymbols.length];
+        for (int i = 0; i < setSymbols.length; i++) {
+            indices[i] = cinta.positionOf(new Symbol(setSymbols[i]));
+            if (indices[i] == -1) {
+                fallo("No hay ningún símbolo de color " + setSymbols[i] + ".");
+                return;
+            }
+        }
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).placeAt(indices[i]);
+        }
+        draw();
+        lastMove = true;
+    }
+    
+    /**
      * says wheter the given place correspons to an existing wheel.
      * 
      * @param pos the place to check, counting from 1.
