@@ -300,40 +300,78 @@ public class SlotMachine
     }
     
     /**
-     * Swap the position between 2 wheels in the machine.
+     * Swap the position between 2 wheels in the machine. Positions are counted
+     * from 1. Nothing happens when either place does not exist.
+     * 
      * @param int wheel1 index of wheel #1
      * @param int wheel2 index of wheel #2
      */
     public void swap(int wheel1, int wheel2){
-        if (wheel1 < 0 || wheel1 >= wheels.size() || wheel2 < 0 || wheel2 >= wheels.size()){
-            fallo("Indice de rueda invalido");
-            lastMove = false;
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas");
             return;
-        } 
+        }
+        if(!existe(wheel1) || !existe(wheel2)){
+            fallo("Indice de rueda invalido");
+            return;
+        }
         
-        Wheel temp = wheels.get(wheel1);
-        wheels.set(wheel1, wheels.get(wheel2));
-        wheels.set(wheel2, temp);
+        int i1 = wheel1 - 1;
+        int i2 = wheel2 - 1;
+        Wheel temp = wheels.get(i1);
+        wheels.set(i1, wheels.get(i2));
+        wheels.set(i2, temp);
         
+        draw();
         lastMove = true;
     }
     
     /**
-     * locks a  wheel so that it cannot spin.
+     * locks a  wheel so that it cannot spin. Places are counted
+     * from 1. Nothing happens when that place does not exist.
      * @param int wheel index of the wheel that user wants to block.
      */
     public void lock(int wheel){
-        wheels.get(wheel).setFixedWheel();
+        if (wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+        }
+        
+        wheels.get(wheel - 1).setFixedWheel();
+        lastMove = true;
     }
     
     /**
-     * unlocks a wheel so that it can spin.
+     * unlocks a wheel so that it can spin. Places are counted
+     * from 1. Nothing happens when that place does not exist.
      * @param int wheel index of the wheel that user wants to unlock.
      */
     public void unlock(int wheel){
-        wheels.get(wheel).setNonFixedWheel();
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+            return;
+        }
+        
+        wheels.get(wheel - 1).setNonFixedWheel();
+        lastMove = true;
     }
     
+    /**
+     * says wheter the given place correspons to an existing wheel.
+     * 
+     * @param pos the place to check, counting from 1.
+     * @return true when there is a wheel at that place
+     */
+    private boolean existe(int pos){
+        return pos >= 1 && pos <= wheels.size();
+    }
     
 
     /**
