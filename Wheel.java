@@ -1,5 +1,5 @@
 import java.util.Random;
-
+import javax.swing.JOptionPane;
 /**
  * A wheel of the slot machine.
  *
@@ -63,6 +63,10 @@ public class Wheel
     {
         int n = cinta.size();
         if (n == 0) {
+            return;
+        }
+        if(isFixed){
+            JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
             return;
         }
         offset = ((offset + steps) % n + n) % n;
