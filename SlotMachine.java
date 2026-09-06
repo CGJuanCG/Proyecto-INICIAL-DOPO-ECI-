@@ -364,6 +364,30 @@ public class SlotMachine
     }
     
     /**
+     * Rotates the wheel at the given place by the given number of steps.
+     * Places are counted from 1. Positive steps rotate the wheel one way
+     * and negative steps rotate the wheel the other way.
+     * 
+     * @param wheel the place of the wheel to rotate
+     * @param steps how many steps to rotate
+     */
+    public void spin(int wheel, int steps){
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+            return;
+        }
+        
+        wheels.get(wheel - 1).rotate(steps);
+        draw();
+        lastMove = true;
+    
+    }
+    
+    /**
      * says wheter the given place correspons to an existing wheel.
      * 
      * @param pos the place to check, counting from 1.
