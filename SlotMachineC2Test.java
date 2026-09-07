@@ -81,4 +81,6 @@ public class SlotMachineC2Test
 
         assertFalse(Arrays.equals(before, after));
     }
+    
+    
 }
