@@ -37,7 +37,21 @@ public class SlotMachine
     private Rectangle cuerpo;
     private boolean isVisible;
     private boolean lastMove;
-
+    
+    private SlotMachine machine;
+    
+    public void testear(){
+        machine = new SlotMachine();
+        machine.makeVisible();
+        machine.addSymbol(1, "red");
+        machine.addSymbol(2, "blue");
+        machine.addSymbol(3, "green");
+        machine.addWheel(1);
+        machine.addWheel(2);
+        machine.addWheel(3);
+        
+    }
+    
     /**
      * Makes a machine with no wheels and no symbols. The machine starts on
      * screen, but nothing is painted until it has wheels.
@@ -176,8 +190,8 @@ public class SlotMachine
         for (Wheel w : wheels) {
             w.spin();
         }
-        draw();
         lastMove = true;
+        draw();
     }
 
     /**
