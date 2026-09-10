@@ -50,7 +50,10 @@ public class Wheel
         if (cinta.size() == 0) {
             return;
         }
-        rotate(randomSpin.nextInt(cinta.size()));
+        int n = cinta.size();
+        int vueltasCompletas = 2 * n;
+        int aterrizaje = randomSpin.nextInt(n);
+        rotate(vueltasCompletas + aterrizaje);
     }
 
     /**
@@ -69,7 +72,42 @@ public class Wheel
             JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
             return;
         }
-        offset = ((offset + steps) % n + n) % n;
+        if (!isVisible){
+            offset = ((offset + steps) % n + n) % n;
+        }
+        
+        else {
+            if (steps>0){
+                for (int i=0; i<steps; i++){
+                    offset +=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+            if (steps<0){
+                for (int i=0; i<-steps; i++){
+                    offset -=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+        }
+    }
+
+    private void esperar(){
+        try{Thread.sleep(100);}
+        catch(InterruptedException e){return;}
+    }
+    private void verificarOffset(){
+        int n = cinta.size();
+        if (offset>=n){
+            offset=0;
+        }
+        if (offset<0){
+            offset=n-1;
+        }
     }
 
     /**
