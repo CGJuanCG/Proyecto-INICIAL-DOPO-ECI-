@@ -69,7 +69,9 @@ public class Wheel
             return;
         }
         if(isFixed){
-            JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
+            if (isVisible) {
+                JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
+            }
             return;
         }
         if (!isVisible){
@@ -97,7 +99,7 @@ public class Wheel
     }
 
     private void esperar(){
-        try{Thread.sleep(100);}
+        try{Thread.sleep(200);}
         catch(InterruptedException e){return;}
     }
     private void verificarOffset(){

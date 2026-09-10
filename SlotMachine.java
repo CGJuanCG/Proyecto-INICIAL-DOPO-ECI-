@@ -352,8 +352,9 @@ public class SlotMachine
         }
         if(!existe(wheel)){
             fallo("Indice de rueda invalido.");
+            return;
         }
-        
+
         wheels.get(wheel - 1).setFixedWheel();
         lastMove = true;
     }
