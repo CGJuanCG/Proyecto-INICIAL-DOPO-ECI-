@@ -1,5 +1,5 @@
 import java.util.Random;
-
+import javax.swing.JOptionPane;
 /**
  * A wheel of the slot machine.
  *
@@ -23,6 +23,7 @@ public class Wheel
     private Rectangle marco;
     private Rectangle vista;
     private boolean isVisible;
+    private boolean isFixed;
 
     /**
      * Makes a wheel that looks at the given strip, stopped at its first symbol.
@@ -49,7 +50,10 @@ public class Wheel
         if (cinta.size() == 0) {
             return;
         }
-        rotate(randomSpin.nextInt(cinta.size()));
+        int n = cinta.size();
+        int vueltasCompletas = 2 * n;
+        int aterrizaje = randomSpin.nextInt(n);
+        rotate(vueltasCompletas + aterrizaje);
     }
 
     /**
@@ -64,7 +68,46 @@ public class Wheel
         if (n == 0) {
             return;
         }
-        offset = ((offset + steps) % n + n) % n;
+        if(isFixed){
+            JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
+            return;
+        }
+        if (!isVisible){
+            offset = ((offset + steps) % n + n) % n;
+        }
+        
+        else {
+            if (steps>0){
+                for (int i=0; i<steps; i++){
+                    offset +=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+            if (steps<0){
+                for (int i=0; i<-steps; i++){
+                    offset -=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+        }
+    }
+
+    private void esperar(){
+        try{Thread.sleep(100);}
+        catch(InterruptedException e){return;}
+    }
+    private void verificarOffset(){
+        int n = cinta.size();
+        if (offset>=n){
+            offset=0;
+        }
+        if (offset<0){
+            offset=n-1;
+        }
     }
 
     /**
@@ -180,4 +223,26 @@ public class Wheel
             vista.makeVisible();
         }
     }
+    
+    /**
+     * Set the wheel to a fixed state
+     */
+    public void setFixedWheel(){
+        isFixed = true;
+    }
+    
+    /**
+     * Set the wheel to a non-fixed state
+     */
+    public void setNonFixedWheel(){
+        isFixed = false;
+    }
+    
+    /**
+     * Indicates whether the wheel is fixed or not
+     */
+    public boolean isFixed(){
+        return isFixed;
+    }
+    
 }

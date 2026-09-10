@@ -37,7 +37,21 @@ public class SlotMachine
     private Rectangle cuerpo;
     private boolean isVisible;
     private boolean lastMove;
-
+    
+    private SlotMachine machine;
+    
+    public void testear(){
+        machine = new SlotMachine();
+        machine.makeVisible();
+        machine.addSymbol(1, "red");
+        machine.addSymbol(2, "blue");
+        machine.addSymbol(3, "green");
+        machine.addWheel(1);
+        machine.addWheel(2);
+        machine.addWheel(3);
+        
+    }
+    
     /**
      * Makes a machine with no wheels and no symbols. The machine starts on
      * screen, but nothing is painted until it has wheels.
@@ -176,8 +190,8 @@ public class SlotMachine
         for (Wheel w : wheels) {
             w.spin();
         }
-        draw();
         lastMove = true;
+        draw();
     }
 
     /**
@@ -298,6 +312,138 @@ public class SlotMachine
         }
         return pos;
     }
+    
+    /**
+     * Swap the position between 2 wheels in the machine. Positions are counted
+     * from 1. Nothing happens when either place does not exist.
+     * 
+     * @param int wheel1 index of wheel #1
+     * @param int wheel2 index of wheel #2
+     */
+    public void swap(int wheel1, int wheel2){
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas");
+            return;
+        }
+        if(!existe(wheel1) || !existe(wheel2)){
+            fallo("Indice de rueda invalido");
+            return;
+        }
+        
+        int i1 = wheel1 - 1;
+        int i2 = wheel2 - 1;
+        Wheel temp = wheels.get(i1);
+        wheels.set(i1, wheels.get(i2));
+        wheels.set(i2, temp);
+        
+        draw();
+        lastMove = true;
+    }
+    
+    /**
+     * locks a  wheel so that it cannot spin. Places are counted
+     * from 1. Nothing happens when that place does not exist.
+     * @param int wheel index of the wheel that user wants to block.
+     */
+    public void lock(int wheel){
+        if (wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+        }
+        
+        wheels.get(wheel - 1).setFixedWheel();
+        lastMove = true;
+    }
+    
+    /**
+     * unlocks a wheel so that it can spin. Places are counted
+     * from 1. Nothing happens when that place does not exist.
+     * @param int wheel index of the wheel that user wants to unlock.
+     */
+    public void unlock(int wheel){
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+            return;
+        }
+        
+        wheels.get(wheel - 1).setNonFixedWheel();
+        lastMove = true;
+    }
+    
+    /**
+     * Rotates the wheel at the given place by the given number of steps.
+     * Places are counted from 1. Positive steps rotate the wheel one way
+     * and negative steps rotate the wheel the other way.
+     * 
+     * @param wheel the place of the wheel to rotate
+     * @param steps how many steps to rotate
+     */
+    public void spin(int wheel, int steps){
+        if(wheels.isEmpty()){
+            fallo("La maquina no tiene ruedas.");
+            return;
+        }
+        if(!existe(wheel)){
+            fallo("Indice de rueda invalido.");
+            return;
+        }
+        
+        wheels.get(wheel - 1).rotate(steps);
+        draw();
+        lastMove = true;
+    
+    }
+    
+    /**
+     * Leaves each wheel showing the color that corresponds to it, in the same
+     * order the wheels are in. Nothing changes when the number of colors does
+     * not match the number of wheels, or when any of those colors is not on
+     * the strip: either the whole configuration is applied, or none of it is.
+     *
+     * @param setSymbols the colors that should end up showing, one per wheel
+     */
+    public void spin(String[] setSymbols)
+    {
+        if (wheels.isEmpty()) {
+            fallo("La máquina no tiene ruedas.");
+            return;
+        }
+        if (setSymbols == null || setSymbols.length != wheels.size()) {
+            fallo("La cantidad de colores no coincide con la cantidad de ruedas.");
+            return;
+        }
+        int[] indices = new int[setSymbols.length];
+        for (int i = 0; i < setSymbols.length; i++) {
+            indices[i] = cinta.positionOf(new Symbol(setSymbols[i]));
+            if (indices[i] == -1) {
+                fallo("No hay ningún símbolo de color " + setSymbols[i] + ".");
+                return;
+            }
+        }
+        for (int i = 0; i < wheels.size(); i++) {
+            wheels.get(i).placeAt(indices[i]);
+        }
+        draw();
+        lastMove = true;
+    }
+    
+    /**
+     * says wheter the given place correspons to an existing wheel.
+     * 
+     * @param pos the place to check, counting from 1.
+     * @return true when there is a wheel at that place
+     */
+    private boolean existe(int pos){
+        return pos >= 1 && pos <= wheels.size();
+    }
+    
 
     /**
      * Notes that the last move did not work, and tells the user why, but only
