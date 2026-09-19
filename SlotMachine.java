@@ -21,16 +21,14 @@ import javax.swing.JOptionPane;
  */
 public class SlotMachine
 {
-    private static final int CUERPO_X = 15;
-    private static final int CUERPO_Y = 45;
-    private static final int CUERPO_ANCHO = 270;
-    private static final int CUERPO_ALTO = 170;
-    private static final int MARGEN = 12;
-    private static final int SEPARACION = 6;
-    private static final int RUEDA_Y = CUERPO_Y + 35;
-    private static final int RUEDA_ALTO = 100;
+    private static final int CUERPO_X = 30;
+    private static final int CUERPO_Y = 90;
+    private static final int CUERPO_ANCHO = 540;
+    private static final int CUERPO_ALTO = 340;
+    private static final int MARGEN = 24;
+    private static final int SEPARACION = 12;
     private static final String COLOR_CUERPO = "black";
-    private static final String COLOR_GANADOR = "yellow";
+    private static final String COLOR_GANADOR = "green";
 
     private List<Wheel> wheels;
     private Cinta cinta;
@@ -520,7 +518,7 @@ public class SlotMachine
         }
         int x = CUERPO_X + MARGEN;
         for (Wheel w : wheels) {
-            w.setBounds(x, RUEDA_Y, ancho, RUEDA_ALTO);
+            w.setBounds(x, ancho);
             x += ancho + separacion;
         }
     }
