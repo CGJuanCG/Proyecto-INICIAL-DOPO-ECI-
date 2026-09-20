@@ -3,6 +3,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import java.util.Random;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A slot machine.
@@ -63,6 +66,33 @@ public class SlotMachine
         cuerpo.changeSize(CUERPO_ALTO, CUERPO_ANCHO);
         isVisible = true;
         lastMove = false;
+    }
+    
+    /**
+     * Creates a machine with n wheels and n symbols, randomly initialized.
+     * The symbols have different colors and the wheels are left at random
+     * places. The machine starts hidden; use makeVisible() to see it.
+     * n must be between 3 and 50.
+     *
+     * @param n number of wheels (and of symbols on the strip)
+     */
+    public SlotMachine(int n)
+    {
+        this();
+        isVisible = false;                                    // (1)
+        if (n < 3 || n > 50) {                   // (2)
+            fallo("El número de ruedas y símbolos debe estar entre 3 y 50");
+            return;
+        }
+        List<String> colors = new ArrayList<>(Arrays.asList(CssColors.distinct(n)));  // (3)
+        Collections.shuffle(colors);                          // (4)
+        for (int i = 0; i < colors.size(); i++) {
+            addSymbol(i + 1, colors.get(i));                  // (5)
+        }
+        for (int wheel = 1; wheel <= n; wheel++) {
+            addWheel(wheel);                                  // (6)
+        }
+        spin();                                               // (7)
     }
 
     /**
