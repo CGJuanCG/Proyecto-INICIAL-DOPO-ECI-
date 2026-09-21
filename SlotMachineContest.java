@@ -6,7 +6,31 @@ import java.util.ArrayList;
  * and distinctSymbols().
  */
 public class SlotMachineContest {
-
+    
+    /**
+     * Solve the problem using the method solucion and the machine is
+     * invisible
+     * @param n number of wheels and symbols
+     * @return a array of arrays integers with the actions to win, in the way wheels,steps
+     */
+    public static int[][] solve(int n) {
+        SlotMachine machine = new SlotMachine(n);
+        machine.makeInvisible();
+        int[][] actions = solucion(machine, n);
+        return actions;
+    }
+    
+    /**
+     * Solve the problem using the method solucion and the machine is
+     * visible
+     * @param n number of wheels and symbols
+     */
+    public static void simulate(int n){
+        SlotMachine machine = new SlotMachine(n);
+        machine.makeVisible();
+        solucion(machine, n);
+    }
+    
     /**
      * Wins the game on a random machine of n wheels and n symbols, using only the
      * number of distinct symbols shown after each action. The machine stays invisible.
@@ -16,9 +40,7 @@ public class SlotMachineContest {
      *         (wheel from 1 to n, steps from 1 to n - 1). Empty if the machine was
      *         already winning.
      */
-    public static int[][] solve(int n) {
-        SlotMachine machine = new SlotMachine(n);
-        machine.makeInvisible();
+    private static int[][] solucion(SlotMachine machine, int n){
         ArrayList<int[]> actions = new ArrayList<int[]>();
 
         if (machine.distinctSymbols() == 1) {
@@ -104,5 +126,6 @@ public class SlotMachineContest {
             actions.add(new int[] {order[t], n - t});
         }
         return actions.toArray(new int[0][]);
+    
     }
 }
