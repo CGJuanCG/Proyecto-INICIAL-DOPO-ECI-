@@ -15,7 +15,9 @@ import javax.swing.JOptionPane;
 public class Wheel
 {
     private static final String COLOR_MARCO = "white";
-    private static final int MARGEN_INTERNO = 4;
+    private static final int MARGEN_INTERNO = 8;
+    private static final int RUEDA_Y = 160;
+    private static final int RUEDA_ALTO = 200;
 
     private Cinta cinta;
     private int offset;
@@ -162,26 +164,25 @@ public class Wheel
         }
     }
 
-    /**
-     * Tells the wheel where it sits on the screen and how big it is. The
-     * machine hands out these numbers, because it is the only one that knows
-     * how many wheels there are.
+        /**
+     * Tells the wheel where it sits horizontally on the screen and how wide it
+     * is. The height and the vertical position are always the same, so the wheel
+     * already knows them. The machine hands out x and width because it is the
+     * only one that knows how many wheels there are.
      *
      * @param x how far from the left the wheel starts
-     * @param y how far from the top the wheel starts
      * @param width how wide the wheel is
-     * @param height how tall the wheel is
      */
-    public void setBounds(int x, int y, int width, int height)
+    public void setBounds(int x, int width)
     {
-        marco.setCoordinates(x, y);
-        marco.changeSize(height, width);
+        marco.setCoordinates(x, RUEDA_Y);
+        marco.changeSize(RUEDA_ALTO, width);
         int interno = MARGEN_INTERNO;
-        if (width <= 2 * interno || height <= 2 * interno) {
+        if (width <= 2 * interno || RUEDA_ALTO <= 2 * interno) {
             interno = 1;
         }
-        vista.setCoordinates(x + interno, y + interno);
-        vista.changeSize(Math.max(height - 2 * interno, 1),
+        vista.setCoordinates(x + interno, RUEDA_Y + interno);
+        vista.changeSize(Math.max(RUEDA_ALTO - 2 * interno, 1),
                          Math.max(width - 2 * interno, 1));
     }
 

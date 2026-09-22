@@ -3,6 +3,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import java.util.Random;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A slot machine.
@@ -21,16 +24,14 @@ import javax.swing.JOptionPane;
  */
 public class SlotMachine
 {
-    private static final int CUERPO_X = 15;
-    private static final int CUERPO_Y = 45;
-    private static final int CUERPO_ANCHO = 270;
-    private static final int CUERPO_ALTO = 170;
-    private static final int MARGEN = 12;
-    private static final int SEPARACION = 6;
-    private static final int RUEDA_Y = CUERPO_Y + 35;
-    private static final int RUEDA_ALTO = 100;
+    private static final int CUERPO_X = 30;
+    private static final int CUERPO_Y = 90;
+    private static final int CUERPO_ANCHO = 540;
+    private static final int CUERPO_ALTO = 340;
+    private static final int MARGEN = 24;
+    private static final int SEPARACION = 12;
     private static final String COLOR_CUERPO = "black";
-    private static final String COLOR_GANADOR = "yellow";
+    private static final String COLOR_GANADOR = "green";
 
     private List<Wheel> wheels;
     private Cinta cinta;
@@ -65,6 +66,33 @@ public class SlotMachine
         cuerpo.changeSize(CUERPO_ALTO, CUERPO_ANCHO);
         isVisible = true;
         lastMove = false;
+    }
+    
+    /**
+     * Creates a machine with n wheels and n symbols, randomly initialized.
+     * The symbols have different colors and the wheels are left at random
+     * places. The machine starts hidden; use makeVisible() to see it.
+     * n must be between 3 and 50.
+     *
+     * @param n number of wheels (and of symbols on the strip)
+     */
+    public SlotMachine(int n)
+    {
+        this();
+        isVisible = false;                                    // (1)
+        if (n < 3 || n > 50) {                   // (2)
+            fallo("El número de ruedas y símbolos debe estar entre 3 y 50");
+            return;
+        }
+        List<String> colors = new ArrayList<>(Arrays.asList(CssColors.distinct(n)));  // (3)
+        Collections.shuffle(colors);                          // (4)
+        for (int i = 0; i < colors.size(); i++) {
+            addSymbol(i + 1, colors.get(i));                  // (5)
+        }
+        for (int wheel = 1; wheel <= n; wheel++) {
+            addWheel(wheel);                                  // (6)
+        }
+        spin();                                               // (7)
     }
 
     /**
@@ -520,7 +548,7 @@ public class SlotMachine
         }
         int x = CUERPO_X + MARGEN;
         for (Wheel w : wheels) {
-            w.setBounds(x, RUEDA_Y, ancho, RUEDA_ALTO);
+            w.setBounds(x, ancho);
             x += ancho + separacion;
         }
     }
