@@ -14,9 +14,14 @@ public class SlotMachineContest {
      * @return a array of arrays integers with the actions to win, in the way wheels,steps
      */
     public static int[][] solve(int n) {
+        if (n < 3 || n > 50) {
+            throw new IllegalArgumentException(
+            "El número de ruedas y símbolos debe estar entre 3 y 50, pero se recibió " + n);
+        }
         SlotMachine machine = new SlotMachine(n);
         machine.makeInvisible();
         int[][] actions = solucion(machine, n);
+        System.out.println(actions);
         return actions;
     }
     
@@ -26,6 +31,10 @@ public class SlotMachineContest {
      * @param n number of wheels and symbols
      */
     public static void simulate(int n){
+        if (n < 3 || n > 50) {
+            throw new IllegalArgumentException(
+            "El número de ruedas y símbolos debe estar entre 3 y 50, pero se recibió " + n);
+        }
         SlotMachine machine = new SlotMachine(n);
         machine.makeVisible();
         solucion(machine, n);
@@ -40,7 +49,7 @@ public class SlotMachineContest {
      *         (wheel from 1 to n, steps from 1 to n - 1). Empty if the machine was
      *         already winning.
      */
-    private static int[][] solucion(SlotMachine machine, int n){
+    static int[][] solucion(SlotMachine machine, int n){
         ArrayList<int[]> actions = new ArrayList<int[]>();
 
         if (machine.distinctSymbols() == 1) {
@@ -87,8 +96,8 @@ public class SlotMachineContest {
             int found = -1;
             for (int b = 1; b <= n && found == -1; b++) {
                 if (!placed[b]) {
-                    machine.spin(b, n - 1);      // b retrocede una posición (n-1 equivale a -1)
-                    actions.add(new int[] {b, n - 1});
+                    machine.spin(b, - 1);      // b retrocede una posición (n-1 equivale a -1)
+                    actions.add(new int[] {b, - 1});
                     int distinct = machine.distinctSymbols();
                     if (distinct == 1) {
                         return actions.toArray(new int[0][]);   // jackpot: terminamos
@@ -107,8 +116,8 @@ public class SlotMachineContest {
             }
             machine.spin(found, 1);              // deshacer el movimiento de la vecina
             actions.add(new int[] {found, 1});
-            machine.spin(a, n - 1);              // deshacer el movimiento de a
-            actions.add(new int[] {a, n - 1});
+            machine.spin(a, -1);              // deshacer el movimiento de a
+            actions.add(new int[] {a, - 1});
             order[t + 1] = found;
             placed[found] = true;
         }
