@@ -3,51 +3,70 @@ import java.util.ArrayList;
 /**
  * Solves Problem I (Slot Machine) of the 2025 ICPC World Finals.
  * SlotMachine is used only as the testing tool: SlotMachine(n), spin(wheel, steps)
- * and distinctSymbols().
+ * and distinctSymbols(); makeVisible() and makeInvisible() are used only to decide
+ * whether the run is shown on screen.
  */
 public class SlotMachineContest {
-    
+
+    private static final int MIN_WHEELS = 3;
+    private static final int MAX_WHEELS = 50;
+
     /**
-     * Solve the problem using the method solucion and the machine is
-     * invisible
-     * @param n number of wheels and symbols
-     * @return a array of arrays integers with the actions to win, in the way wheels,steps
+     * Wins the game on a random machine of n wheels and n symbols, keeping the
+     * machine invisible, and returns the actions that were needed.
+     *
+     * @param n number of wheels and symbols (3 to 50)
+     * @return an array of actions in the order they were played; each action is
+     *         {wheel, steps}. Empty if the machine was already winning.
+     * @throws IllegalArgumentException if n is outside the range 3..50
      */
     public static int[][] solve(int n) {
-        if (n < 3 || n > 50) {
-            throw new IllegalArgumentException(
-            "El número de ruedas y símbolos debe estar entre 3 y 50, pero se recibió " + n);
-        }
+        validarRango(n);
         SlotMachine machine = new SlotMachine(n);
         machine.makeInvisible();
-        int[][] actions = solucion(machine, n);
-        System.out.println(actions);
-        return actions;
+        return solucion(machine, n);
     }
-    
+
     /**
-     * Solve the problem using the method solucion and the machine is
-     * visible
-     * @param n number of wheels and symbols
+     * Wins the game on a random machine of n wheels and n symbols with the machine
+     * visible, so the whole run can be watched step by step.
+     *
+     * @param n number of wheels and symbols (3 to 50)
+     * @throws IllegalArgumentException if n is outside the range 3..50
      */
     public static void simulate(int n){
-        if (n < 3 || n > 50) {
-            throw new IllegalArgumentException(
-            "El número de ruedas y símbolos debe estar entre 3 y 50, pero se recibió " + n);
-        }
+        validarRango(n);
         SlotMachine machine = new SlotMachine(n);
         machine.makeVisible();
         solucion(machine, n);
     }
-    
+
     /**
-     * Wins the game on a random machine of n wheels and n symbols, using only the
-     * number of distinct symbols shown after each action. The machine stays invisible.
+     * Checks that n is a size the problem allows.
      *
-     * @param n number of wheels and symbols (3 to 50)
-     * @return the actions needed to win, in order; each action is {wheel, steps}
-     *         (wheel from 1 to n, steps from 1 to n - 1). Empty if the machine was
-     *         already winning.
+     * @param n number of wheels and symbols
+     * @throws IllegalArgumentException if n is outside the range 3..50
+     */
+    private static void validarRango(int n) {
+        if (n < MIN_WHEELS || n > MAX_WHEELS) {
+            throw new IllegalArgumentException(
+                "El número de ruedas y símbolos debe estar entre " + MIN_WHEELS
+                + " y " + MAX_WHEELS + ", pero se recibió " + n);
+        }
+    }
+
+    /**
+     * Wins the game on the given machine, using only the number of distinct symbols
+     * shown after each action. The caller decides whether the machine is visible.
+     *
+     * The machine must have exactly n wheels and n symbols; this method cannot check
+     * that precondition, because it is only allowed to use spin and distinctSymbols.
+     *
+     * @param machine the machine to play on
+     * @param n number of wheels and symbols of that machine (3 to 50)
+     * @return the actions needed to win, in order; each action is {wheel, steps},
+     *         with the wheel from 1 to n and steps between -(n - 1) and n - 1, never
+     *         zero. Empty if the machine was already winning.
      */
     static int[][] solucion(SlotMachine machine, int n){
         ArrayList<int[]> actions = new ArrayList<int[]>();
@@ -96,8 +115,8 @@ public class SlotMachineContest {
             int found = -1;
             for (int b = 1; b <= n && found == -1; b++) {
                 if (!placed[b]) {
-                    machine.spin(b, - 1);      // b retrocede una posición (n-1 equivale a -1)
-                    actions.add(new int[] {b, - 1});
+                    machine.spin(b, -1);      // b retrocede una posición (n-1 equivale a -1)
+                    actions.add(new int[] {b, -1});
                     int distinct = machine.distinctSymbols();
                     if (distinct == 1) {
                         return actions.toArray(new int[0][]);   // jackpot: terminamos
@@ -117,7 +136,7 @@ public class SlotMachineContest {
             machine.spin(found, 1);              // deshacer el movimiento de la vecina
             actions.add(new int[] {found, 1});
             machine.spin(a, -1);              // deshacer el movimiento de a
-            actions.add(new int[] {a, - 1});
+            actions.add(new int[] {a, -1});
             order[t + 1] = found;
             placed[found] = true;
         }

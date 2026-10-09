@@ -89,7 +89,7 @@ public class SlotMachineContestTest
         SlotMachine machine = new SlotMachine(35);
         int[][] moves = SlotMachineContest.solucion(machine, 35);
         for (int[] move: moves){
-            assertNotEquals(0,moves[1]);
+            assertNotEquals(0, move[1]);
         }
     }
     
