@@ -38,10 +38,7 @@ public class SlotMachine
     private Rectangle cuerpo;
     private boolean isVisible;
     private boolean lastMove;
-    
-    private SlotMachine machine;
-            
-    
+
     /**
      * Makes a machine with no wheels and no symbols. The machine starts on
      * screen, but nothing is painted until it has wheels.

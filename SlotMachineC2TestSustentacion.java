@@ -50,6 +50,7 @@ public class SlotMachineC2TestSustentacion
      * otras dos giran, paso a paso y visiblemente, hasta lograr el jackpot;
      * luego desbloquearla y volver a girarla rompe el jackpot.
      *
+    **/
     @Test
     public void pruebaAceptacion1_bloqueoProtegeMientrasSeLograElJackpot()
     {
