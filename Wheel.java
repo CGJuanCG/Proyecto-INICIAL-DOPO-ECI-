@@ -46,16 +46,17 @@ public class Wheel
     /**
      * Spins the wheel by a random amount. Nothing happens when the strip has no
      * symbols.
+     * @return if rotate could make the spin
      */
-    public void spin()
+    public boolean spin()
     {
         if (cinta.size() == 0) {
-            return;
+            return false;
         }
         int n = cinta.size();
         int vueltasCompletas = 2 * n;
         int aterrizaje = randomSpin.nextInt(n);
-        rotate(vueltasCompletas + aterrizaje);
+        return rotate(vueltasCompletas + aterrizaje);
     }
 
     /**
@@ -63,21 +64,17 @@ public class Wheel
      * backwards, and numbers larger than the strip simply go around.
      *
      * @param steps how many places the wheel moves
+     * @return true when the wheel is rotated, false if not
      */
-    public void rotate(int steps)
+    public boolean rotate(int steps)
     {
         int n = cinta.size();
-        if (n == 0) {
-            return;
-        }
-        if(isFixed){
-            if (isVisible) {
-                JOptionPane.showMessageDialog(null, "La rueda está bloqueada");
-            }
-            return;
+        if (n == 0 || isFixed) {
+            return false;
         }
         if (!isVisible){
             offset = ((offset + steps) % n + n) % n;
+            return true;
         }
         
         else {
@@ -97,6 +94,7 @@ public class Wheel
                     draw();
                 }
             }
+            return true;
         }
     }
 

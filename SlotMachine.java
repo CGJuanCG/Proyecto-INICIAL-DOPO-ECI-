@@ -186,9 +186,11 @@ public class SlotMachine
             fallo("La máquina no tiene ruedas.");
             return;
         }
-        wheels.get(ajustar(wheel, wheels.size()) - 1).spin();
-        draw();
-        lastMove = true;
+        if (wheels.get(ajustar(wheel, wheels.size()) - 1).spin()){
+            draw();
+            lastMove = true;
+        }
+        else{ fallo("La rueda esta bloqueada");}
     }
 
     /**
@@ -397,6 +399,7 @@ public class SlotMachine
      * Places are counted from 1. Positive steps rotate the wheel one way
      * and negative steps rotate the wheel the other way.
      * 
+     * Nothing happens when the wheel is locked, and ok() reports false
      * @param wheel the place of the wheel to rotate
      * @param steps how many steps to rotate
      */
@@ -405,15 +408,15 @@ public class SlotMachine
             fallo("La maquina no tiene ruedas.");
             return;
         }
-        if(!existe(wheel)){
+        else if(!existe(wheel)){
             fallo("Indice de rueda invalido.");
             return;
         }
-        
-        wheels.get(wheel - 1).rotate(steps);
-        draw();
-        lastMove = true;
-    
+        else if (wheels.get(wheel - 1).rotate(steps)){
+            draw();
+            lastMove = true;
+        }
+        else {lastMove = false; fallo("No se pudo realizar la operacion");}
     }
     
     /**
