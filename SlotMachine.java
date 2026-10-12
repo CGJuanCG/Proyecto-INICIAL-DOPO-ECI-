@@ -98,7 +98,8 @@ public class SlotMachine
     /**
      * Removes the wheel sitting at the place you ask for. Places outside the
      * range are moved to the nearest end. Nothing happens when the machine has
-     * no wheels.
+     * no wheels, or when the wheel does not let itself be removed; in both
+     * cases ok() reports false.
      *
      * @param pos which wheel to remove, counting from 1
      */
@@ -108,7 +109,12 @@ public class SlotMachine
             fallo("La máquina no tiene ruedas.");
             return;
         }
-        Wheel eliminada = wheels.remove(ajustar(pos, wheels.size()) - 1);
+        int indice = ajustar(pos, wheels.size()) - 1;
+        if (!wheels.get(indice).canBeRemoved()) {
+            fallo("La rueda " + (indice + 1) + " no se deja eliminar.");
+            return;
+        }
+        Wheel eliminada = wheels.remove(indice);
         eliminada.makeInvisible();
         draw();
         lastMove = true;
@@ -331,10 +337,11 @@ public class SlotMachine
     
     /**
      * Swap the position between 2 wheels in the machine. Positions are counted
-     * from 1. Nothing happens when either place does not exist.
+     * from 1. Nothing happens when either place does not exist, or when either
+     * wheel does not let itself be swapped; in both cases ok() reports false.
      * 
-     * @param int wheel1 index of wheel #1
-     * @param int wheel2 index of wheel #2
+     * @param wheel1 index of wheel #1
+     * @param wheel2 index of wheel #2
      */
     public void swap(int wheel1, int wheel2){
         if(wheels.isEmpty()){
@@ -348,9 +355,14 @@ public class SlotMachine
         
         int i1 = wheel1 - 1;
         int i2 = wheel2 - 1;
-        Wheel temp = wheels.get(i1);
-        wheels.set(i1, wheels.get(i2));
-        wheels.set(i2, temp);
+        Wheel primera = wheels.get(i1);
+        Wheel segunda = wheels.get(i2);
+        if (!primera.canBeSwapped() || !segunda.canBeSwapped()) {
+            fallo("Alguna de las ruedas no se deja intercambiar.");
+            return;
+        }
+        wheels.set(i1, segunda);
+        wheels.set(i2, primera);
         
         draw();
         lastMove = true;
@@ -358,8 +370,9 @@ public class SlotMachine
     
     /**
      * locks a  wheel so that it cannot spin. Places are counted
-     * from 1. Nothing happens when that place does not exist.
-     * @param int wheel index of the wheel that user wants to block.
+     * from 1. Nothing happens when that place does not exist, or when the
+     * wheel does not let itself be locked; in both cases ok() reports false.
+     * @param wheel index of the wheel that user wants to block.
      */
     public void lock(int wheel){
         if (wheels.isEmpty()){
@@ -370,15 +383,17 @@ public class SlotMachine
             fallo("Indice de rueda invalido.");
             return;
         }
-
-        wheels.get(wheel - 1).setFixedWheel();
+        if (!wheels.get(wheel - 1).setFixedWheel()) {
+            fallo("La rueda " + wheel + " no se deja bloquear.");
+            return;
+        }
         lastMove = true;
     }
     
     /**
      * unlocks a wheel so that it can spin. Places are counted
      * from 1. Nothing happens when that place does not exist.
-     * @param int wheel index of the wheel that user wants to unlock.
+     * @param wheel index of the wheel that user wants to unlock.
      */
     public void unlock(int wheel){
         if(wheels.isEmpty()){

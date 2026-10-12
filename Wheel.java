@@ -1,5 +1,4 @@
 import java.util.Random;
-import javax.swing.JOptionPane;
 /**
  * A wheel of the slot machine.
  *
@@ -226,10 +225,14 @@ public class Wheel
     }
     
     /**
-     * Set the wheel to a fixed state
+     * Asks the wheel to stay where it is, so that it does not move until it
+     * is unlocked. A normal wheel always accepts.
+     *
+     * @return true when the wheel accepted being locked
      */
-    public void setFixedWheel(){
+    public boolean setFixedWheel(){
         isFixed = true;
+        return true;
     }
     
     /**
@@ -241,9 +244,31 @@ public class Wheel
     
     /**
      * Indicates whether the wheel is fixed or not
+     *
+     * @return true when the wheel is locked
      */
     public boolean isFixed(){
         return isFixed;
+    }
+    
+    /**
+     * Says whether the wheel lets the machine change its place with another
+     * wheel. A normal wheel always does.
+     *
+     * @return true when the wheel can be swapped
+     */
+    public boolean canBeSwapped(){
+        return true;
+    }
+    
+    /**
+     * Says whether the wheel lets the machine take it out. A normal wheel
+     * always does.
+     *
+     * @return true when the wheel can be removed
+     */
+    public boolean canBeRemoved(){
+        return true;
     }
     
 }

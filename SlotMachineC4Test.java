@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 /**
  * The test class SlotMachineC4Test.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
+ * @version 11-10-2026
  */
 public class SlotMachineC4Test
 {
@@ -60,5 +60,41 @@ public class SlotMachineC4Test
             machine.spin(1,1);
             assertTrue(machine.ok());
         }
-    
+
+    /**
+     * A normal wheel accepts being locked, so the move should succeed.
+     */
+    @Test
+    public void shouldSucceedWhenLockingNormalWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.lock(1);
+        assertTrue(machine.ok());
+    }
+
+    /**
+     * Two normal wheels accept being swapped: the move should succeed and
+     * the colors they show should trade places.
+     */
+    @Test
+    public void shouldSucceedWhenSwappingNormalWheels(){
+        SlotMachine machine = new SlotMachine(3);
+        String[] before = machine.configuration();
+        machine.swap(1, 3);
+        assertTrue(machine.ok());
+        String[] after = machine.configuration();
+        assertEquals(before[0], after[2]);
+        assertEquals(before[2], after[0]);
+    }
+
+    /**
+     * A normal wheel accepts being removed: the move should succeed and the
+     * machine should have one wheel less.
+     */
+    @Test
+    public void shouldSucceedWhenDeletingNormalWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.delWheel(2);
+        assertTrue(machine.ok());
+        assertEquals(2, machine.configuration().length);
+    }
 }
