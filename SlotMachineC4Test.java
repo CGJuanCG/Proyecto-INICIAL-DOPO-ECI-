@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 
 /**
  * The test class SlotMachineC4Test.
@@ -96,5 +97,50 @@ public class SlotMachineC4Test
         machine.delWheel(2);
         assertTrue(machine.ok());
         assertEquals(2, machine.configuration().length);
+    }
+    
+    @Test
+    public void shouldCreateARebelWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("rebel",1);
+        assertTrue(machine.ok());
+        assertEquals(4,machine.configuration().length);
+    }
+    
+    @Test
+    public void shouldNotLockARebelWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("rebel",1);
+        machine.lock(1);
+        assertFalse(machine.ok());
+    }
+    
+    @Test
+    public void shouldNotSwapARebelWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        String[] antes;
+        machine.addWheel("rebel",1);
+        antes = machine.configuration();
+        machine.swap(1,2);
+        assertFalse(machine.ok());
+        assertArrayEquals(antes,machine.configuration());
+    }
+    
+    @Test
+    public void shouldNotDeleteARebelWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("rebel",1);
+        machine.delWheel(1);
+        assertFalse(machine.ok());
+    }
+    
+    @Test
+    public void shouldNotDeleteARebelWheel2(){
+        SlotMachine machine = new SlotMachine(3);
+        String[] antes;
+        machine.addWheel("rebel",1);
+        antes = machine.configuration();
+        machine.delWheel(1);
+        assertEquals(antes.length,machine.configuration().length);
     }
 }

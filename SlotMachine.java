@@ -89,8 +89,27 @@ public class SlotMachine
      */
     public void addWheel(int pos)
     {
+        this.addWheel("normal",pos);
+    }
+    
+    /**
+     * Adds a new wheel based on the specified type and location
+     * if it is specified a Unknown type, nothing is added and ok() is false
+     * @param type of the wheel "normal" or "rebel"
+     * @param pos where the new wheel is going
+     */
+    public void addWheel(String type, int pos){
         int indice = ajustar(pos, wheels.size() + 1) - 1;
-        wheels.add(indice, new Wheel(cinta));
+        if ("rebel".equalsIgnoreCase(type)){
+            wheels.add(indice, new Rebel(cinta));
+        }
+        else if("normal".equalsIgnoreCase(type)){
+            wheels.add(indice, new Wheel(cinta));
+        }
+        else{
+            fallo("Tipo de rueda desconocido");
+            return;
+        }
         draw();
         lastMove = true;
     }
