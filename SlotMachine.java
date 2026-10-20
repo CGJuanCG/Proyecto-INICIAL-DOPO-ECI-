@@ -106,6 +106,9 @@ public class SlotMachine
         else if("normal".equalsIgnoreCase(type)){
             wheels.add(indice, new Wheel(cinta));
         }
+        else if("lefty".equalsIgnoreCase(type)){
+            wheels.add(indice,new Lefty(cinta));
+        }
         else{
             fallo("Tipo de rueda desconocido");
             return;
@@ -211,7 +214,12 @@ public class SlotMachine
             fallo("La máquina no tiene ruedas.");
             return;
         }
-        if (wheels.get(ajustar(wheel, wheels.size()) - 1).spin()){
+        int indice = ajustar(wheel, wheels.size()) - 1;
+        Wheel vecina = null;
+        if (indice>0){
+            vecina = wheels.get(indice-1);
+        }
+        if (wheels.get(indice).spin(vecina)){
             draw();
             lastMove = true;
         }

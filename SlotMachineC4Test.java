@@ -143,4 +143,15 @@ public class SlotMachineC4Test
         machine.delWheel(1);
         assertEquals(antes.length,machine.configuration().length);
     }
+    
+    @Test
+    public void shouldCopyLeftNeighborWhenSpinningALeftyWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty",2);
+        machine.spin(2);
+        assertTrue(machine.ok());
+        String[] configuracion = machine.configuration();
+        assertEquals(4,configuracion.length);
+        assertEquals(configuracion[0],configuracion[1]);
+    }
 }
