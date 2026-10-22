@@ -45,4 +45,15 @@ public class Rebel extends Wheel
     public boolean canBeRemoved(){
         return false;
     }
+
+    /**
+     * A rebel wheel has a red frame, so it can be told apart on the screen.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    @Override
+    protected String colorMarco()
+    {
+        return "red";
+    }
 }

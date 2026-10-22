@@ -395,4 +395,19 @@ public class SlotMachineC4Test
         assertFalse(machine.ok());
         assertEquals("red", machine.configuration()[0]);
     }
+
+    /**
+     * Every kind of wheel should have a frame of its own color, so the kinds
+     * can be told apart on the screen.
+     */
+    @Test
+    public void shouldGiveEveryKindOfWheelItsOwnFrameColor(){
+        Cinta cinta = new Cinta();
+        java.util.Set<String> colores = new java.util.HashSet<>();
+        colores.add(new Wheel(cinta).colorMarco());
+        colores.add(new Rebel(cinta).colorMarco());
+        colores.add(new Lefty(cinta).colorMarco());
+        colores.add(new Lazy(cinta).colorMarco());
+        assertEquals(4, colores.size());
+    }
 }
