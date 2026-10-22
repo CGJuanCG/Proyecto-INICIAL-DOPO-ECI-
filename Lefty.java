@@ -33,6 +33,16 @@ public class Lefty extends Wheel
         }
         placeAt(izquierda.getOffset());
         return true;
-    } 
-    
+    }
+
+    /**
+     * A lefty wheel has a blue frame, so it can be told apart on the screen.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    @Override
+    protected String colorMarco()
+    {
+        return "dodgerblue";
+    }
 }

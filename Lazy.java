@@ -33,4 +33,15 @@ public class Lazy extends Wheel
     {
         return rotate(1);
     }
+
+    /**
+     * A lazy wheel has a gold frame, so it can be told apart on the screen.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    @Override
+    protected String colorMarco()
+    {
+        return "gold";
+    }
 }

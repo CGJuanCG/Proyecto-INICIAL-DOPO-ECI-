@@ -16,7 +16,8 @@ import java.util.Random;
 public class Wheel
 {
     private static final String COLOR_MARCO = "white";
-    private static final int MARGEN_INTERNO = 8;
+    private static final String COLOR_FONDO = "white";
+    private static final int MARGEN_INTERNO = 12;
     private static final int RUEDA_Y = 160;
     private static final int RUEDA_ALTO = 200;
 
@@ -24,6 +25,7 @@ public class Wheel
     private int offset;
     private Random randomSpin;
     private Rectangle marco;
+    private Rectangle fondo;
     private Ventana ventana;
     private boolean isVisible;
     private boolean isFixed;
@@ -40,6 +42,7 @@ public class Wheel
         offset = 0;
         randomSpin = new Random();
         marco = new Rectangle();
+        fondo = new Rectangle();
         ventana = new Ventana();
         isVisible = false;
     }
@@ -195,6 +198,10 @@ public class Wheel
         if (width <= 2 * interno || RUEDA_ALTO <= 2 * interno) {
             interno = 1;
         }
+        int borde = interno / 2;
+        fondo.setCoordinates(x + borde, RUEDA_Y + borde);
+        fondo.changeSize(Math.max(RUEDA_ALTO - 2 * borde, 1),
+                         Math.max(width - 2 * borde, 1));
         ventana.setBounds(x + interno, RUEDA_Y + interno,
                           width - 2 * interno, RUEDA_ALTO - 2 * interno);
     }
@@ -215,22 +222,27 @@ public class Wheel
     {
         isVisible = false;
         ventana.clear();
+        fondo.makeInvisible();
         marco.makeInvisible();
     }
 
     /**
-     * Paints the wheel again: first its frame, and then the symbol it is
-     * showing now, which draws itself in the window of the wheel. It does
-     * nothing while the wheel is hidden, so the machine can run without opening
-     * any window.
+     * Paints the wheel again: first its frame, in the color of its kind, then
+     * a white background, and then the symbol it is showing now, which draws
+     * itself in the window of the wheel. The white background leaves a white
+     * line between the frame and the symbol, so the frame can be seen even
+     * when the symbol has its same color. It does nothing while the wheel is
+     * hidden, so the machine can run without opening any window.
      */
     public void draw()
     {
         if (!isVisible) {
             return;
         }
-        marco.changeColor(COLOR_MARCO);
+        marco.changeColor(colorMarco());
         marco.makeVisible();
+        fondo.changeColor(COLOR_FONDO);
+        fondo.makeVisible();
         Symbol visible = visibleSymbol();
         if (visible == null) {
             ventana.clear();
@@ -299,5 +311,16 @@ public class Wheel
     public boolean spin(Wheel izquierda){
         return spin();
     }
-    
+
+    /**
+     * Says the color of the frame of the wheel, so that each kind of wheel can
+     * be told apart on the screen. A normal wheel has a white frame; other
+     * kinds of wheels give their own color.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    protected String colorMarco()
+    {
+        return COLOR_MARCO;
+    }
 }
