@@ -7,7 +7,7 @@
  * Only one shape is on view at a time.
  *
  * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
- * @version 21-10-2026
+
  */
 public class Ventana
 {
