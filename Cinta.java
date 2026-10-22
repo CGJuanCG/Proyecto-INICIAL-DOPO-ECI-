@@ -103,4 +103,14 @@ public class Cinta
     {
         return symbols.remove(symbol);
     }
+
+    /**
+     * Tells every symbol on the strip that the machine has just made a spin.
+     */
+    public void notifySpin()
+    {
+        for (Symbol s : symbols) {
+            s.notifySpin();
+        }
+    }
 }
