@@ -109,6 +109,9 @@ public class SlotMachine
         else if("lefty".equalsIgnoreCase(type)){
             wheels.add(indice,new Lefty(cinta));
         }
+        else if("lazy".equalsIgnoreCase(type)){
+            wheels.add(indice, new Lazy(cinta));
+        }
         else{
             fallo("Tipo de rueda desconocido");
             return;
