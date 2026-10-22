@@ -211,4 +211,136 @@ public class SlotMachineC4Test
         String[] configuracion = machine.configuration();
         assertEquals(configuracion[1], configuracion[2]);
     }
+
+    /**
+     * Makes an empty machine that stays off the screen, so the tests can build
+     * exactly the strip they need.
+     */
+    private SlotMachine maquinaVacia(){
+        SlotMachine machine = new SlotMachine();
+        machine.makeInvisible();
+        return machine;
+    }
+
+    /**
+     * The machine should accept one symbol of every kind, in the places asked
+     * for.
+     */
+    @Test
+    public void shouldAddSymbolsOfEveryKind(){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol("normal", 1, "red");
+        assertTrue(machine.ok());
+        machine.addSymbol("ephemeral", 2, "blue");
+        assertTrue(machine.ok());
+        machine.addSymbol("shy", 3, "green");
+        assertTrue(machine.ok());
+        assertArrayEquals(new String[]{"red", "blue", "green"}, machine.symbols());
+    }
+
+    /**
+     * An unknown kind of symbol should not be added.
+     */
+    @Test
+    public void shouldNotAddASymbolOfUnknownKind(){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol("xyz", 1, "red");
+        assertFalse(machine.ok());
+        assertEquals(0, machine.symbols().length);
+    }
+
+    /**
+     * Two symbols of the same color are the same symbol, even if they are of
+     * different kinds, so the second one should not be added.
+     */
+    @Test
+    public void shouldNotAddTwoSymbolsOfTheSameColorEvenOfDifferentKinds(){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol("normal", 1, "red");
+        machine.addSymbol("ephemeral", 2, "red");
+        assertFalse(machine.ok());
+        assertEquals(1, machine.symbols().length);
+    }
+
+    /**
+     * A symbol that is not normal should still be found by its color.
+     */
+    @Test
+    public void shouldDeleteAnEphemeralSymbolByItsColor(){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol("ephemeral", 1, "red");
+        machine.delSymbol("red");
+        assertTrue(machine.ok());
+        assertEquals(0, machine.symbols().length);
+    }
+
+    /**
+     * An ephemeral symbol should get smaller on every spin until it is a dot,
+     * and then stay a dot.
+     */
+    @Test
+    public void shouldShrinkAnEphemeralSymbolUntilItIsADot(){
+        Ephemeral symbol = new Ephemeral("red");
+        assertEquals(100, symbol.getSize());
+        symbol.notifySpin();
+        assertEquals(80, symbol.getSize());
+        for (int i = 0; i < 10; i++) {
+            symbol.notifySpin();
+        }
+        assertEquals(0, symbol.getSize());
+    }
+
+    /**
+     * When the machine spins, the strip should tell its ephemeral symbols, so
+     * they shrink.
+     */
+    @Test
+    public void shouldShrinkEphemeralSymbolsWhenTheStripHearsOfASpin(){
+        Cinta cinta = new Cinta();
+        Ephemeral symbol = new Ephemeral("red");
+        cinta.addSymbol(0, symbol);
+        cinta.notifySpin();
+        assertEquals(80, symbol.getSize());
+    }
+
+    /**
+     * A shy symbol should switch between showing and hiding every time it is
+     * selected.
+     */
+    @Test
+    public void shouldSwitchAShySymbolEveryTimeItIsSelected(){
+        Shy symbol = new Shy("red");
+        assertTrue(symbol.isShown());
+        symbol.select();
+        assertFalse(symbol.isShown());
+        symbol.select();
+        assertTrue(symbol.isShown());
+    }
+
+    /**
+     * When a wheel stops on a shy symbol, the symbol should hear about it.
+     */
+    @Test
+    public void shouldHideAShySymbolWhenAWheelStopsOnIt(){
+        Cinta cinta = new Cinta();
+        Shy symbol = new Shy("red");
+        cinta.addSymbol(0, symbol);
+        Wheel wheel = new Wheel(cinta);
+        wheel.placeAt(0);
+        assertFalse(symbol.isShown());
+    }
+
+    /**
+     * Hiding only changes how a shy symbol looks: for the game it is still the
+     * symbol on view.
+     */
+    @Test
+    public void shouldStillShowTheColorOfAHiddenShySymbol(){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol("shy", 1, "red");
+        machine.addWheel(1);
+        machine.placeSymbol(1, "red");
+        assertTrue(machine.ok());
+        assertEquals("red", machine.configuration()[0]);
+    }
 }

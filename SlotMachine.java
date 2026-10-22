@@ -143,16 +143,47 @@ public class SlotMachine
     }
 
     /**
-     * Adds a symbol of the given color to the strip, at the place you ask for.
-     * Nothing happens when the machine already has a symbol of that color.
+     * Adds a normal symbol of the given color to the strip, at the place you
+     * ask for. Nothing happens when the machine already has a symbol of that
+     * color.
      *
      * @param pos where the new symbol goes, counting from 1
      * @param color the CSS name of the color
      */
     public void addSymbol(int pos, String color)
     {
+        addSymbol("normal", pos, color);
+    }
+
+    /**
+     * Adds a symbol of the given kind and color to the strip, at the place you
+     * ask for. Nothing is added, and ok() reports false, when the kind is
+     * unknown or when the machine already has a symbol of that color, of any
+     * kind.
+     *
+     * @param type the kind of symbol: "normal", "ephemeral" or "shy" (case is
+     *             ignored)
+     * @param pos where the new symbol goes, counting from 1
+     * @param color the CSS name of the color
+     */
+    public void addSymbol(String type, int pos, String color)
+    {
+        Symbol nuevo;
+        if ("normal".equalsIgnoreCase(type)) {
+            nuevo = new Symbol(color);
+        }
+        else if ("ephemeral".equalsIgnoreCase(type)) {
+            nuevo = new Ephemeral(color);
+        }
+        else if ("shy".equalsIgnoreCase(type)) {
+            nuevo = new Shy(color);
+        }
+        else {
+            fallo("Tipo de símbolo desconocido.");
+            return;
+        }
         int indice = ajustar(pos, cinta.size() + 1) - 1;
-        if (!cinta.addSymbol(indice, new Symbol(color))) {
+        if (!cinta.addSymbol(indice, nuevo)) {
             fallo("Ya existe un símbolo de color " + color + ".");
             return;
         }
