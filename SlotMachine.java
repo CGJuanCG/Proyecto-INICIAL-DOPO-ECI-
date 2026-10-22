@@ -106,6 +106,9 @@ public class SlotMachine
         else if("normal".equalsIgnoreCase(type)){
             wheels.add(indice, new Wheel(cinta));
         }
+        else if("lefty".equalsIgnoreCase(type)){
+            wheels.add(indice,new Lefty(cinta));
+        }
         else{
             fallo("Tipo de rueda desconocido");
             return;
@@ -211,7 +214,12 @@ public class SlotMachine
             fallo("La máquina no tiene ruedas.");
             return;
         }
-        if (wheels.get(ajustar(wheel, wheels.size()) - 1).spin()){
+        int indice = ajustar(wheel, wheels.size()) - 1;
+        Wheel vecina = null;
+        if (indice>0){
+            vecina = wheels.get(indice-1);
+        }
+        if (wheels.get(indice).spin(vecina)){
             draw();
             lastMove = true;
         }
@@ -219,8 +227,10 @@ public class SlotMachine
     }
 
     /**
-     * Spins every wheel of the machine. Nothing happens when the machine has no
-     * wheels.
+     * Spins every wheel of the machine, from left to right. Each wheel is told
+     * which wheel sits on its left, so a lefty wheel copies the new position of
+     * its neighbor. Locked wheels stay where they are. Nothing happens when the
+     * machine has no wheels.
      */
     public void spin()
     {
@@ -228,8 +238,12 @@ public class SlotMachine
             fallo("La máquina no tiene ruedas.");
             return;
         }
-        for (Wheel w : wheels) {
-            w.spin();
+        for (int i = 0; i < wheels.size(); i++) {
+            Wheel vecina = null;
+            if (i > 0) {
+                vecina = wheels.get(i - 1);
+            }
+            wheels.get(i).spin(vecina);
         }
         lastMove = true;
         draw();

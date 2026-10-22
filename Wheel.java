@@ -29,7 +29,7 @@ public class Wheel
     /**
      * Makes a wheel that looks at the given strip, stopped at its first symbol.
      * The wheel starts hidden and with no place on the screen yet.
-     *
+     * 
      * @param cinta the strip of symbols the wheel reads from
      */
     public Wheel(Cinta cinta)
@@ -269,6 +269,19 @@ public class Wheel
      */
     public boolean canBeRemoved(){
         return true;
+    }
+    
+    /**
+     * Spins the wheel knowing which wheel sits right on its left. A normal
+     * wheel does not need its neighbour, so it ignores it and spins by a
+     * random amount, just like spin().
+     *
+     * @param izquierda the wheel on the left of this one, or null when this
+     *                  is the first wheel
+     * @return true when the wheel could spin, false if not
+     */
+    public boolean spin(Wheel izquierda){
+        return spin();
     }
     
 }

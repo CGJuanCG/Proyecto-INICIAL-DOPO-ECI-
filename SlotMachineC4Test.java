@@ -143,4 +143,72 @@ public class SlotMachineC4Test
         machine.delWheel(1);
         assertEquals(antes.length,machine.configuration().length);
     }
+    
+    @Test
+    public void shouldCopyLeftNeighborWhenSpinningALeftyWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty",2);
+        machine.spin(2);
+        assertTrue(machine.ok());
+        String[] configuracion = machine.configuration();
+        assertEquals(4,configuracion.length);
+        assertEquals(configuracion[0],configuracion[1]);
+    }
+
+    /**
+     * A lefty wheel in the first place has no wheel on its left, so it should
+     * spin like a normal wheel and the move should succeed.
+     */
+    @Test
+    public void shouldSpinNormallyWhenLeftyHasNoLeftNeighbor(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty", 1);
+        machine.spin(1);
+        assertTrue(machine.ok());
+        assertEquals(4, machine.configuration().length);
+    }
+
+    /**
+     * A locked lefty wheel should not copy its neighbor: the move fails and
+     * nothing changes.
+     */
+    @Test
+    public void shouldNotMoveALockedLeftyWheel(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty", 2);
+        machine.lock(2);
+        String[] antes = machine.configuration();
+        machine.spin(2);
+        assertFalse(machine.ok());
+        assertArrayEquals(antes, machine.configuration());
+    }
+
+    /**
+     * When every wheel spins, the lefty wheel should end up showing the same
+     * symbol as the wheel on its left.
+     */
+    @Test
+    public void shouldCopyLeftNeighborWhenSpinningAllWheels(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty", 2);
+        machine.spin();
+        assertTrue(machine.ok());
+        String[] configuracion = machine.configuration();
+        assertEquals(configuracion[0], configuracion[1]);
+    }
+
+    /**
+     * After a swap the lefty wheel has a new neighbor, and it should copy that
+     * new neighbor, not the old one.
+     */
+    @Test
+    public void shouldCopyTheNewNeighborAfterASwap(){
+        SlotMachine machine = new SlotMachine(3);
+        machine.addWheel("lefty", 2);
+        machine.swap(2, 3);
+        machine.spin(3);
+        assertTrue(machine.ok());
+        String[] configuracion = machine.configuration();
+        assertEquals(configuracion[1], configuracion[2]);
+    }
 }
