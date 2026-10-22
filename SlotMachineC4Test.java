@@ -343,4 +343,56 @@ public class SlotMachineC4Test
         assertTrue(machine.ok());
         assertEquals("red", machine.configuration()[0]);
     }
+
+    /**
+     * Makes an empty machine with three normal symbols, "red", "blue" and
+     * "green", in that order, and one wheel of the given kind stopped on
+     * "red".
+     */
+    private SlotMachine maquinaConUnaRueda(String type){
+        SlotMachine machine = maquinaVacia();
+        machine.addSymbol(1, "red");
+        machine.addSymbol(2, "blue");
+        machine.addSymbol(3, "green");
+        machine.addWheel(type, 1);
+        machine.placeSymbol(1, "red");
+        return machine;
+    }
+
+    /**
+     * A lazy wheel should move forward just one place every time it spins.
+     */
+    @Test
+    public void shouldMoveALazyWheelJustOnePlace(){
+        SlotMachine machine = maquinaConUnaRueda("lazy");
+        machine.spin(1);
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[0]);
+        machine.spin(1);
+        assertEquals("green", machine.configuration()[0]);
+    }
+
+    /**
+     * A lazy wheel should also move just one place when the whole machine
+     * spins.
+     */
+    @Test
+    public void shouldMoveALazyWheelJustOnePlaceWhenAllWheelsSpin(){
+        SlotMachine machine = maquinaConUnaRueda("lazy");
+        machine.spin();
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[0]);
+    }
+
+    /**
+     * A locked lazy wheel should not move.
+     */
+    @Test
+    public void shouldNotMoveALockedLazyWheel(){
+        SlotMachine machine = maquinaConUnaRueda("lazy");
+        machine.lock(1);
+        machine.spin(1);
+        assertFalse(machine.ok());
+        assertEquals("red", machine.configuration()[0]);
+    }
 }
