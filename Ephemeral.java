@@ -8,7 +8,7 @@
  * symbol: it still counts for the configuration and for the jackpot.
  *
  * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
- * @version 21-10-2026
+
  */
 public class Ephemeral extends Symbol
 {
