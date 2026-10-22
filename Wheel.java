@@ -5,8 +5,10 @@ import java.util.Random;
  * A wheel is a window onto the strip of symbols that all the wheels share. The
  * only thing a wheel owns is the place of the strip it is stopped at.
  *
- * The wheel also draws itself, because it is the one that knows where it sits
- * on the screen. The symbol only lends its color.
+ * The wheel draws its own frame, because it is the one that knows where it
+ * sits on the screen. Inside the frame it has a window, which it lends to the
+ * symbol it is stopped at so that the symbol draws itself. Every time the
+ * wheel stops on a symbol, it lets that symbol know.
  *
  * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
  * @version 23-08-2026
@@ -22,7 +24,7 @@ public class Wheel
     private int offset;
     private Random randomSpin;
     private Rectangle marco;
-    private Rectangle vista;
+    private Ventana ventana;
     private boolean isVisible;
     private boolean isFixed;
 
@@ -38,7 +40,7 @@ public class Wheel
         offset = 0;
         randomSpin = new Random();
         marco = new Rectangle();
-        vista = new Rectangle();
+        ventana = new Ventana();
         isVisible = false;
     }
 
@@ -73,6 +75,7 @@ public class Wheel
         }
         if (!isVisible){
             offset = ((offset + steps) % n + n) % n;
+            seleccionarVisible();
             return true;
         }
         
@@ -93,6 +96,7 @@ public class Wheel
                     draw();
                 }
             }
+            seleccionarVisible();
             return true;
         }
     }
@@ -112,7 +116,8 @@ public class Wheel
     }
 
     /**
-     * Stops the wheel right at a given place of the strip.
+     * Stops the wheel right at a given place of the strip, and lets the symbol
+     * there know that the wheel stopped on it.
      *
      * @param index the place the wheel should show
      */
@@ -124,6 +129,18 @@ public class Wheel
             return;
         }
         offset = ((index % n) + n) % n;
+        seleccionarVisible();
+    }
+
+    /**
+     * Lets the symbol the wheel has just stopped on know about it.
+     */
+    private void seleccionarVisible()
+    {
+        Symbol visible = visibleSymbol();
+        if (visible != null) {
+            visible.select();
+        }
     }
 
     /**
@@ -178,9 +195,8 @@ public class Wheel
         if (width <= 2 * interno || RUEDA_ALTO <= 2 * interno) {
             interno = 1;
         }
-        vista.setCoordinates(x + interno, RUEDA_Y + interno);
-        vista.changeSize(Math.max(RUEDA_ALTO - 2 * interno, 1),
-                         Math.max(width - 2 * interno, 1));
+        ventana.setBounds(x + interno, RUEDA_Y + interno,
+                          width - 2 * interno, RUEDA_ALTO - 2 * interno);
     }
 
     /**
@@ -198,12 +214,13 @@ public class Wheel
     public void makeInvisible()
     {
         isVisible = false;
-        vista.makeInvisible();
+        ventana.clear();
         marco.makeInvisible();
     }
 
     /**
-     * Paints the wheel again with whatever symbol it is showing now. It does
+     * Paints the wheel again: first its frame, and then the symbol it is
+     * showing now, which draws itself in the window of the wheel. It does
      * nothing while the wheel is hidden, so the machine can run without opening
      * any window.
      */
@@ -216,11 +233,10 @@ public class Wheel
         marco.makeVisible();
         Symbol visible = visibleSymbol();
         if (visible == null) {
-            vista.makeInvisible();
+            ventana.clear();
         }
         else {
-            vista.changeColor(visible.getColor());
-            vista.makeVisible();
+            visible.paint(ventana);
         }
     }
     

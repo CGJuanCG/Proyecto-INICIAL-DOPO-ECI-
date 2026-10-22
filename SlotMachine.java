@@ -220,6 +220,7 @@ public class SlotMachine
             vecina = wheels.get(indice-1);
         }
         if (wheels.get(indice).spin(vecina)){
+            cinta.notifySpin();
             draw();
             lastMove = true;
         }
@@ -245,6 +246,7 @@ public class SlotMachine
             }
             wheels.get(i).spin(vecina);
         }
+        cinta.notifySpin();
         lastMove = true;
         draw();
     }
@@ -461,6 +463,7 @@ public class SlotMachine
             return;
         }
         else if (wheels.get(wheel - 1).rotate(steps)){
+            cinta.notifySpin();
             draw();
             lastMove = true;
         }
@@ -496,6 +499,7 @@ public class SlotMachine
         for (int i = 0; i < wheels.size(); i++) {
             wheels.get(i).placeAt(indices[i]);
         }
+        cinta.notifySpin();
         draw();
         lastMove = true;
     }
