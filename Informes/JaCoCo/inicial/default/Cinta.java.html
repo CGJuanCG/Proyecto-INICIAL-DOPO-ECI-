@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Cinta.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Slot Machine - DOPO</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Cinta.java</span></div><h1>Cinta.java</h1><pre class="source lang-java linenums">import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * The strip of symbols of a slot machine.
+ *
+ * Every wheel of the machine looks at this same strip, so there is only one of
+ * them. The strip keeps its symbols in order and never holds two symbols of the
+ * same color.
+ *
+ * Places are counted from 0, like any list in Java. Turning that into the
+ * numbers the user types, which start at 1, is the job of SlotMachine.
+ *
+ * @author Juan Diego Carreño Gutierrez - Juan Diego Castaño Parra
+ * @version 23/08/2026
+ */
+public class Cinta
+{
+    private List&lt;Symbol&gt; symbols;
+
+    /**
+     * Makes an empty strip.
+     */
+    public Cinta()
+<span class="fc" id="L25">    {</span>
+<span class="fc" id="L26">        symbols = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L27">    }</span>
+
+    /**
+     * Says how many symbols the strip has.
+     *
+     * @return how many symbols there are
+     */
+    public int size()
+    {
+<span class="fc" id="L36">        return symbols.size();</span>
+    }
+
+    /**
+     * Gives back the symbol sitting in a given place.
+     *
+     * @param index the place to look at, from 0 to size()-1
+     * @return the symbol in that place, or null when the place does not exist
+     */
+    public Symbol symbolAt(int index)
+    {
+<span class="pc bpc" id="L47" title="1 of 4 branches missed.">        if (index &lt; 0 || index &gt;= symbols.size()) {</span>
+<span class="fc" id="L48">            return null;</span>
+        }
+<span class="fc" id="L50">        return symbols.get(index);</span>
+    }
+
+    /**
+     * Looks for a symbol and says where it is.
+     *
+     * @param symbol the symbol to look for
+     * @return the place where it sits, or -1 when it is not on the strip
+     */
+    public int positionOf(Symbol symbol)
+    {
+<span class="fc" id="L61">        return symbols.indexOf(symbol);</span>
+    }
+
+    /**
+     * Says whether the strip already has a symbol like this one.
+     *
+     * @param symbol the symbol to look for
+     * @return true when it is already on the strip
+     */
+    public boolean contains(Symbol symbol)
+    {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        return positionOf(symbol) != -1;</span>
+    }
+
+    /**
+     * Puts a symbol into a given place and pushes the following ones along.
+     * Nothing happens when the strip already has that color, or when the place
+     * does not exist.
+     *
+     * @param index the place to put it in, from 0 to size()
+     * @param symbol the symbol to add
+     * @return true when the symbol was added
+     */
+    public boolean addSymbol(int index, Symbol symbol)
+    {
+<span class="pc bpc" id="L86" title="1 of 4 branches missed.">        if (symbol == null || contains(symbol)) {</span>
+<span class="fc" id="L87">            return false;</span>
+        }
+<span class="pc bpc" id="L89" title="2 of 4 branches missed.">        if (index &lt; 0 || index &gt; symbols.size()) {</span>
+<span class="nc" id="L90">            return false;</span>
+        }
+<span class="fc" id="L92">        symbols.add(index, symbol);</span>
+<span class="fc" id="L93">        return true;</span>
+    }
+
+    /**
+     * Takes a symbol off the strip.
+     *
+     * @param symbol the symbol to remove
+     * @return true when it was on the strip and got removed
+     */
+    public boolean delSymbol(Symbol symbol)
+    {
+<span class="fc" id="L104">        return symbols.remove(symbol);</span>
+    }
+
+    /**
+     * Tells every symbol on the strip that the machine has just made a spin.
+     */
+    public void notifySpin()
+    {
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (Symbol s : symbols) {</span>
+<span class="fc" id="L113">            s.notifySpin();</span>
+<span class="fc" id="L114">        }</span>
+<span class="fc" id="L115">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
