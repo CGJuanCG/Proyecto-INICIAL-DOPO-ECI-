@@ -1,0 +1,326 @@
+import java.util.Random;
+/**
+ * A wheel of the slot machine.
+ *
+ * A wheel is a window onto the strip of symbols that all the wheels share. The
+ * only thing a wheel owns is the place of the strip it is stopped at.
+ *
+ * The wheel draws its own frame, because it is the one that knows where it
+ * sits on the screen. Inside the frame it has a window, which it lends to the
+ * symbol it is stopped at so that the symbol draws itself. Every time the
+ * wheel stops on a symbol, it lets that symbol know.
+ *
+ * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
+ * @version 23-08-2026
+ */
+public class Wheel
+{
+    private static final String COLOR_MARCO = "white";
+    private static final String COLOR_FONDO = "white";
+    private static final int MARGEN_INTERNO = 12;
+    private static final int RUEDA_Y = 160;
+    private static final int RUEDA_ALTO = 200;
+
+    private Cinta cinta;
+    private int offset;
+    private Random randomSpin;
+    private Rectangle marco;
+    private Rectangle fondo;
+    private Ventana ventana;
+    private boolean isVisible;
+    private boolean isFixed;
+
+    /**
+     * Makes a wheel that looks at the given strip, stopped at its first symbol.
+     * The wheel starts hidden and with no place on the screen yet.
+     * 
+     * @param cinta the strip of symbols the wheel reads from
+     */
+    public Wheel(Cinta cinta)
+    {
+        this.cinta = cinta;
+        offset = 0;
+        randomSpin = new Random();
+        marco = new Rectangle();
+        fondo = new Rectangle();
+        ventana = new Ventana();
+        isVisible = false;
+    }
+
+    /**
+     * Spins the wheel by a random amount. Nothing happens when the strip has no
+     * symbols.
+     * @return if rotate could make the spin
+     */
+    public boolean spin()
+    {
+        if (cinta.size() == 0) {
+            return false;
+        }
+        int n = cinta.size();
+        int vueltasCompletas = 2 * n;
+        int aterrizaje = randomSpin.nextInt(n);
+        return rotate(vueltasCompletas + aterrizaje);
+    }
+
+    /**
+     * Moves the wheel forward by a number of places. Negative numbers move it
+     * backwards, and numbers larger than the strip simply go around.
+     *
+     * @param steps how many places the wheel moves
+     * @return true when the wheel is rotated, false if not
+     */
+    public boolean rotate(int steps)
+    {
+        int n = cinta.size();
+        if (n == 0 || isFixed) {
+            return false;
+        }
+        if (!isVisible){
+            offset = ((offset + steps) % n + n) % n;
+            seleccionarVisible();
+            return true;
+        }
+        
+        else {
+            if (steps>0){
+                for (int i=0; i<steps; i++){
+                    offset +=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+            if (steps<0){
+                for (int i=0; i<-steps; i++){
+                    offset -=1;
+                    verificarOffset();
+                    esperar();
+                    draw();
+                }
+            }
+            seleccionarVisible();
+            return true;
+        }
+    }
+
+    private void esperar(){
+        try{Thread.sleep(200);}
+        catch(InterruptedException e){return;}
+    }
+    private void verificarOffset(){
+        int n = cinta.size();
+        if (offset>=n){
+            offset=0;
+        }
+        if (offset<0){
+            offset=n-1;
+        }
+    }
+
+    /**
+     * Stops the wheel right at a given place of the strip, and lets the symbol
+     * there know that the wheel stopped on it.
+     *
+     * @param index the place the wheel should show
+     */
+    public void placeAt(int index)
+    {
+        int n = cinta.size();
+        if (n == 0) {
+            offset = 0;
+            return;
+        }
+        offset = ((index % n) + n) % n;
+        seleccionarVisible();
+    }
+
+    /**
+     * Lets the symbol the wheel has just stopped on know about it.
+     */
+    private void seleccionarVisible()
+    {
+        Symbol visible = visibleSymbol();
+        if (visible != null) {
+            visible.select();
+        }
+    }
+
+    /**
+     * Gives back the symbol showing in the window of this wheel.
+     *
+     * @return the symbol on view, or null when the strip is empty
+     */
+    public Symbol visibleSymbol()
+    {
+        return cinta.symbolAt(offset);
+    }
+
+    /**
+     * Says which place of the strip the wheel is stopped at.
+     *
+     * @return the place the wheel is showing
+     */
+    public int getOffset()
+    {
+        return offset;
+    }
+
+    /**
+     * Moves the wheel back into a place that still exists, after the strip has
+     * grown or shrunk.
+     */
+    public void normalize()
+    {
+        int n = cinta.size();
+        if (n == 0) {
+            offset = 0;
+        }
+        else if (offset >= n) {
+            offset = offset % n;
+        }
+    }
+
+        /**
+     * Tells the wheel where it sits horizontally on the screen and how wide it
+     * is. The height and the vertical position are always the same, so the wheel
+     * already knows them. The machine hands out x and width because it is the
+     * only one that knows how many wheels there are.
+     *
+     * @param x how far from the left the wheel starts
+     * @param width how wide the wheel is
+     */
+    public void setBounds(int x, int width)
+    {
+        marco.setCoordinates(x, RUEDA_Y);
+        marco.changeSize(RUEDA_ALTO, width);
+        int interno = MARGEN_INTERNO;
+        if (width <= 2 * interno || RUEDA_ALTO <= 2 * interno) {
+            interno = 1;
+        }
+        int borde = interno / 2;
+        fondo.setCoordinates(x + borde, RUEDA_Y + borde);
+        fondo.changeSize(Math.max(RUEDA_ALTO - 2 * borde, 1),
+                         Math.max(width - 2 * borde, 1));
+        ventana.setBounds(x + interno, RUEDA_Y + interno,
+                          width - 2 * interno, RUEDA_ALTO - 2 * interno);
+    }
+
+    /**
+     * Shows the wheel and paints the symbol it is stopped at.
+     */
+    public void makeVisible()
+    {
+        isVisible = true;
+        draw();
+    }
+
+    /**
+     * Takes the wheel off the screen.
+     */
+    public void makeInvisible()
+    {
+        isVisible = false;
+        ventana.clear();
+        fondo.makeInvisible();
+        marco.makeInvisible();
+    }
+
+    /**
+     * Paints the wheel again: first its frame, in the color of its kind, then
+     * a white background, and then the symbol it is showing now, which draws
+     * itself in the window of the wheel. The white background leaves a white
+     * line between the frame and the symbol, so the frame can be seen even
+     * when the symbol has its same color. It does nothing while the wheel is
+     * hidden, so the machine can run without opening any window.
+     */
+    public void draw()
+    {
+        if (!isVisible) {
+            return;
+        }
+        marco.changeColor(colorMarco());
+        marco.makeVisible();
+        fondo.changeColor(COLOR_FONDO);
+        fondo.makeVisible();
+        Symbol visible = visibleSymbol();
+        if (visible == null) {
+            ventana.clear();
+        }
+        else {
+            visible.paint(ventana);
+        }
+    }
+    
+    /**
+     * Asks the wheel to stay where it is, so that it does not move until it
+     * is unlocked. A normal wheel always accepts.
+     *
+     * @return true when the wheel accepted being locked
+     */
+    public boolean setFixedWheel(){
+        isFixed = true;
+        return true;
+    }
+    
+    /**
+     * Set the wheel to a non-fixed state
+     */
+    public void setNonFixedWheel(){
+        isFixed = false;
+    }
+    
+    /**
+     * Indicates whether the wheel is fixed or not
+     *
+     * @return true when the wheel is locked
+     */
+    public boolean isFixed(){
+        return isFixed;
+    }
+    
+    /**
+     * Says whether the wheel lets the machine change its place with another
+     * wheel. A normal wheel always does.
+     *
+     * @return true when the wheel can be swapped
+     */
+    public boolean canBeSwapped(){
+        return true;
+    }
+    
+    /**
+     * Says whether the wheel lets the machine take it out. A normal wheel
+     * always does.
+     *
+     * @return true when the wheel can be removed
+     */
+    public boolean canBeRemoved(){
+        return true;
+    }
+    
+    /**
+     * Spins the wheel knowing which wheel sits right on its left. A normal
+     * wheel does not need its neighbour, so it ignores it and spins by a
+     * random amount, just like spin().
+     *
+     * @param izquierda the wheel on the left of this one, or null when this
+     *                  is the first wheel
+     * @return true when the wheel could spin, false if not
+     */
+    public boolean spin(Wheel izquierda){
+        return spin();
+    }
+
+    /**
+     * Says the color of the frame of the wheel, so that each kind of wheel can
+     * be told apart on the screen. A normal wheel has a white frame; other
+     * kinds of wheels give their own color.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    protected String colorMarco()
+    {
+        return COLOR_MARCO;
+    }
+}

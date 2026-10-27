@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CssColors.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Slot Machine - DOPO</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">CssColors.java</span></div><h1>CssColors.java</h1><pre class="source lang-java linenums">import java.awt.Color;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Catalogue of the standard CSS named colors (e.g. &quot;red&quot;, &quot;coral&quot;, &quot;darkblue&quot;).
+ * &lt;p&gt;
+ * It has two jobs:
+ * &lt;ul&gt;
+ *   &lt;li&gt;translate a color name into a {@link Color} that can be drawn;&lt;/li&gt;
+ *   &lt;li&gt;give back n &lt;b&gt;different&lt;/b&gt; color names, so every symbol can be told apart.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * Names that are just another spelling of the same color (cyan/aqua, magenta/fuchsia,
+ * grey/gray...) are accepted by {@link #toColor(String)} but are never handed out by
+ * {@link #distinct(int)}, because two symbols with the same look would be confusing.
+ */
+public final class CssColors {
+
+    /** Distinct CSS colors, in the order in which they are handed out (vivid ones first). */
+<span class="fc" id="L22">    private static final Map&lt;String, Integer&gt; NAMED = new LinkedHashMap&lt;&gt;();</span>
+
+    /** Alternative spellings that point to a color already in NAMED. */
+<span class="fc" id="L25">    private static final Map&lt;String, String&gt; ALIASES = new LinkedHashMap&lt;&gt;();</span>
+
+    static {
+<span class="fc" id="L28">        add(&quot;red&quot;, 0xFF0000);</span>
+<span class="fc" id="L29">        add(&quot;blue&quot;, 0x0000FF);</span>
+<span class="fc" id="L30">        add(&quot;lime&quot;, 0x00FF00);</span>
+<span class="fc" id="L31">        add(&quot;yellow&quot;, 0xFFFF00);</span>
+<span class="fc" id="L32">        add(&quot;fuchsia&quot;, 0xFF00FF);</span>
+<span class="fc" id="L33">        add(&quot;aqua&quot;, 0x00FFFF);</span>
+<span class="fc" id="L34">        add(&quot;orange&quot;, 0xFFA500);</span>
+<span class="fc" id="L35">        add(&quot;green&quot;, 0x008000);</span>
+<span class="fc" id="L36">        add(&quot;purple&quot;, 0x800080);</span>
+<span class="fc" id="L37">        add(&quot;teal&quot;, 0x008080);</span>
+<span class="fc" id="L38">        add(&quot;navy&quot;, 0x000080);</span>
+<span class="fc" id="L39">        add(&quot;maroon&quot;, 0x800000);</span>
+<span class="fc" id="L40">        add(&quot;olive&quot;, 0x808000);</span>
+<span class="fc" id="L41">        add(&quot;black&quot;, 0x000000);</span>
+<span class="fc" id="L42">        add(&quot;gray&quot;, 0x808080);</span>
+<span class="fc" id="L43">        add(&quot;silver&quot;, 0xC0C0C0);</span>
+<span class="fc" id="L44">        add(&quot;antiquewhite&quot;, 0xFAEBD7);</span>
+<span class="fc" id="L45">        add(&quot;aquamarine&quot;, 0x7FFFD4);</span>
+<span class="fc" id="L46">        add(&quot;bisque&quot;, 0xFFE4C4);</span>
+<span class="fc" id="L47">        add(&quot;blanchedalmond&quot;, 0xFFEBCD);</span>
+<span class="fc" id="L48">        add(&quot;blueviolet&quot;, 0x8A2BE2);</span>
+<span class="fc" id="L49">        add(&quot;brown&quot;, 0xA52A2A);</span>
+<span class="fc" id="L50">        add(&quot;burlywood&quot;, 0xDEB887);</span>
+<span class="fc" id="L51">        add(&quot;cadetblue&quot;, 0x5F9EA0);</span>
+<span class="fc" id="L52">        add(&quot;chartreuse&quot;, 0x7FFF00);</span>
+<span class="fc" id="L53">        add(&quot;chocolate&quot;, 0xD2691E);</span>
+<span class="fc" id="L54">        add(&quot;coral&quot;, 0xFF7F50);</span>
+<span class="fc" id="L55">        add(&quot;cornflowerblue&quot;, 0x6495ED);</span>
+<span class="fc" id="L56">        add(&quot;crimson&quot;, 0xDC143C);</span>
+<span class="fc" id="L57">        add(&quot;darkblue&quot;, 0x00008B);</span>
+<span class="fc" id="L58">        add(&quot;darkcyan&quot;, 0x008B8B);</span>
+<span class="fc" id="L59">        add(&quot;darkgoldenrod&quot;, 0xB8860B);</span>
+<span class="fc" id="L60">        add(&quot;darkgray&quot;, 0xA9A9A9);</span>
+<span class="fc" id="L61">        add(&quot;darkgreen&quot;, 0x006400);</span>
+<span class="fc" id="L62">        add(&quot;darkkhaki&quot;, 0xBDB76B);</span>
+<span class="fc" id="L63">        add(&quot;darkmagenta&quot;, 0x8B008B);</span>
+<span class="fc" id="L64">        add(&quot;darkolivegreen&quot;, 0x556B2F);</span>
+<span class="fc" id="L65">        add(&quot;darkorange&quot;, 0xFF8C00);</span>
+<span class="fc" id="L66">        add(&quot;darkorchid&quot;, 0x9932CC);</span>
+<span class="fc" id="L67">        add(&quot;darkred&quot;, 0x8B0000);</span>
+<span class="fc" id="L68">        add(&quot;darksalmon&quot;, 0xE9967A);</span>
+<span class="fc" id="L69">        add(&quot;darkseagreen&quot;, 0x8FBC8F);</span>
+<span class="fc" id="L70">        add(&quot;darkslateblue&quot;, 0x483D8B);</span>
+<span class="fc" id="L71">        add(&quot;darkslategray&quot;, 0x2F4F4F);</span>
+<span class="fc" id="L72">        add(&quot;darkturquoise&quot;, 0x00CED1);</span>
+<span class="fc" id="L73">        add(&quot;darkviolet&quot;, 0x9400D3);</span>
+<span class="fc" id="L74">        add(&quot;deeppink&quot;, 0xFF1493);</span>
+<span class="fc" id="L75">        add(&quot;deepskyblue&quot;, 0x00BFFF);</span>
+<span class="fc" id="L76">        add(&quot;dimgray&quot;, 0x696969);</span>
+<span class="fc" id="L77">        add(&quot;dodgerblue&quot;, 0x1E90FF);</span>
+<span class="fc" id="L78">        add(&quot;firebrick&quot;, 0xB22222);</span>
+<span class="fc" id="L79">        add(&quot;forestgreen&quot;, 0x228B22);</span>
+<span class="fc" id="L80">        add(&quot;gainsboro&quot;, 0xDCDCDC);</span>
+<span class="fc" id="L81">        add(&quot;gold&quot;, 0xFFD700);</span>
+<span class="fc" id="L82">        add(&quot;goldenrod&quot;, 0xDAA520);</span>
+<span class="fc" id="L83">        add(&quot;greenyellow&quot;, 0xADFF2F);</span>
+<span class="fc" id="L84">        add(&quot;hotpink&quot;, 0xFF69B4);</span>
+<span class="fc" id="L85">        add(&quot;indianred&quot;, 0xCD5C5C);</span>
+<span class="fc" id="L86">        add(&quot;indigo&quot;, 0x4B0082);</span>
+<span class="fc" id="L87">        add(&quot;khaki&quot;, 0xF0E68C);</span>
+<span class="fc" id="L88">        add(&quot;lavender&quot;, 0xE6E6FA);</span>
+<span class="fc" id="L89">        add(&quot;lawngreen&quot;, 0x7CFC00);</span>
+<span class="fc" id="L90">        add(&quot;lemonchiffon&quot;, 0xFFFACD);</span>
+<span class="fc" id="L91">        add(&quot;lightblue&quot;, 0xADD8E6);</span>
+<span class="fc" id="L92">        add(&quot;lightcoral&quot;, 0xF08080);</span>
+<span class="fc" id="L93">        add(&quot;lightgoldenrodyellow&quot;, 0xFAFAD2);</span>
+<span class="fc" id="L94">        add(&quot;lightgray&quot;, 0xD3D3D3);</span>
+<span class="fc" id="L95">        add(&quot;lightgreen&quot;, 0x90EE90);</span>
+<span class="fc" id="L96">        add(&quot;lightpink&quot;, 0xFFB6C1);</span>
+<span class="fc" id="L97">        add(&quot;lightsalmon&quot;, 0xFFA07A);</span>
+<span class="fc" id="L98">        add(&quot;lightseagreen&quot;, 0x20B2AA);</span>
+<span class="fc" id="L99">        add(&quot;lightskyblue&quot;, 0x87CEFA);</span>
+<span class="fc" id="L100">        add(&quot;lightslategray&quot;, 0x778899);</span>
+<span class="fc" id="L101">        add(&quot;lightsteelblue&quot;, 0xB0C4DE);</span>
+<span class="fc" id="L102">        add(&quot;limegreen&quot;, 0x32CD32);</span>
+<span class="fc" id="L103">        add(&quot;mediumaquamarine&quot;, 0x66CDAA);</span>
+<span class="fc" id="L104">        add(&quot;mediumblue&quot;, 0x0000CD);</span>
+<span class="fc" id="L105">        add(&quot;mediumorchid&quot;, 0xBA55D3);</span>
+<span class="fc" id="L106">        add(&quot;mediumpurple&quot;, 0x9370DB);</span>
+<span class="fc" id="L107">        add(&quot;mediumseagreen&quot;, 0x3CB371);</span>
+<span class="fc" id="L108">        add(&quot;mediumslateblue&quot;, 0x7B68EE);</span>
+<span class="fc" id="L109">        add(&quot;mediumspringgreen&quot;, 0x00FA9A);</span>
+<span class="fc" id="L110">        add(&quot;mediumturquoise&quot;, 0x48D1CC);</span>
+<span class="fc" id="L111">        add(&quot;mediumvioletred&quot;, 0xC71585);</span>
+<span class="fc" id="L112">        add(&quot;midnightblue&quot;, 0x191970);</span>
+<span class="fc" id="L113">        add(&quot;mistyrose&quot;, 0xFFE4E1);</span>
+<span class="fc" id="L114">        add(&quot;moccasin&quot;, 0xFFE4B5);</span>
+<span class="fc" id="L115">        add(&quot;navajowhite&quot;, 0xFFDEAD);</span>
+<span class="fc" id="L116">        add(&quot;olivedrab&quot;, 0x6B8E23);</span>
+<span class="fc" id="L117">        add(&quot;orangered&quot;, 0xFF4500);</span>
+<span class="fc" id="L118">        add(&quot;orchid&quot;, 0xDA70D6);</span>
+<span class="fc" id="L119">        add(&quot;palegoldenrod&quot;, 0xEEE8AA);</span>
+<span class="fc" id="L120">        add(&quot;palegreen&quot;, 0x98FB98);</span>
+<span class="fc" id="L121">        add(&quot;paleturquoise&quot;, 0xAFEEEE);</span>
+<span class="fc" id="L122">        add(&quot;palevioletred&quot;, 0xDB7093);</span>
+<span class="fc" id="L123">        add(&quot;papayawhip&quot;, 0xFFEFD5);</span>
+<span class="fc" id="L124">        add(&quot;peachpuff&quot;, 0xFFDAB9);</span>
+<span class="fc" id="L125">        add(&quot;peru&quot;, 0xCD853F);</span>
+<span class="fc" id="L126">        add(&quot;pink&quot;, 0xFFC0CB);</span>
+<span class="fc" id="L127">        add(&quot;plum&quot;, 0xDDA0DD);</span>
+<span class="fc" id="L128">        add(&quot;powderblue&quot;, 0xB0E0E6);</span>
+<span class="fc" id="L129">        add(&quot;rebeccapurple&quot;, 0x663399);</span>
+<span class="fc" id="L130">        add(&quot;rosybrown&quot;, 0xBC8F8F);</span>
+<span class="fc" id="L131">        add(&quot;royalblue&quot;, 0x4169E1);</span>
+<span class="fc" id="L132">        add(&quot;saddlebrown&quot;, 0x8B4513);</span>
+<span class="fc" id="L133">        add(&quot;salmon&quot;, 0xFA8072);</span>
+<span class="fc" id="L134">        add(&quot;sandybrown&quot;, 0xF4A460);</span>
+<span class="fc" id="L135">        add(&quot;seagreen&quot;, 0x2E8B57);</span>
+<span class="fc" id="L136">        add(&quot;sienna&quot;, 0xA0522D);</span>
+<span class="fc" id="L137">        add(&quot;skyblue&quot;, 0x87CEEB);</span>
+<span class="fc" id="L138">        add(&quot;slateblue&quot;, 0x6A5ACD);</span>
+<span class="fc" id="L139">        add(&quot;slategray&quot;, 0x708090);</span>
+<span class="fc" id="L140">        add(&quot;springgreen&quot;, 0x00FF7F);</span>
+<span class="fc" id="L141">        add(&quot;steelblue&quot;, 0x4682B4);</span>
+<span class="fc" id="L142">        add(&quot;tan&quot;, 0xD2B48C);</span>
+<span class="fc" id="L143">        add(&quot;thistle&quot;, 0xD8BFD8);</span>
+<span class="fc" id="L144">        add(&quot;tomato&quot;, 0xFF6347);</span>
+<span class="fc" id="L145">        add(&quot;turquoise&quot;, 0x40E0D0);</span>
+<span class="fc" id="L146">        add(&quot;violet&quot;, 0xEE82EE);</span>
+<span class="fc" id="L147">        add(&quot;wheat&quot;, 0xF5DEB3);</span>
+<span class="fc" id="L148">        add(&quot;yellowgreen&quot;, 0x9ACD32);</span>
+<span class="fc" id="L149">        add(&quot;white&quot;, 0xFFFFFF);</span>
+<span class="fc" id="L150">        add(&quot;snow&quot;, 0xFFFAFA);</span>
+<span class="fc" id="L151">        add(&quot;ghostwhite&quot;, 0xF8F8FF);</span>
+<span class="fc" id="L152">        add(&quot;floralwhite&quot;, 0xFFFAF0);</span>
+<span class="fc" id="L153">        add(&quot;whitesmoke&quot;, 0xF5F5F5);</span>
+<span class="fc" id="L154">        add(&quot;seashell&quot;, 0xFFF5EE);</span>
+<span class="fc" id="L155">        add(&quot;ivory&quot;, 0xFFFFF0);</span>
+<span class="fc" id="L156">        add(&quot;mintcream&quot;, 0xF5FFFA);</span>
+<span class="fc" id="L157">        add(&quot;azure&quot;, 0xF0FFFF);</span>
+<span class="fc" id="L158">        add(&quot;aliceblue&quot;, 0xF0F8FF);</span>
+<span class="fc" id="L159">        add(&quot;honeydew&quot;, 0xF0FFF0);</span>
+<span class="fc" id="L160">        add(&quot;lavenderblush&quot;, 0xFFF0F5);</span>
+<span class="fc" id="L161">        add(&quot;oldlace&quot;, 0xFDF5E6);</span>
+<span class="fc" id="L162">        add(&quot;linen&quot;, 0xFAF0E6);</span>
+<span class="fc" id="L163">        add(&quot;cornsilk&quot;, 0xFFF8DC);</span>
+<span class="fc" id="L164">        add(&quot;beige&quot;, 0xF5F5DC);</span>
+<span class="fc" id="L165">        add(&quot;lightyellow&quot;, 0xFFFFE0);</span>
+<span class="fc" id="L166">        add(&quot;lightcyan&quot;, 0xE0FFFF);</span>
+
+
+<span class="fc" id="L169">        ALIASES.put(&quot;cyan&quot;, &quot;aqua&quot;);</span>
+<span class="fc" id="L170">        ALIASES.put(&quot;magenta&quot;, &quot;fuchsia&quot;);</span>
+<span class="fc" id="L171">        ALIASES.put(&quot;grey&quot;, &quot;gray&quot;);</span>
+<span class="fc" id="L172">        ALIASES.put(&quot;darkgrey&quot;, &quot;darkgray&quot;);</span>
+<span class="fc" id="L173">        ALIASES.put(&quot;darkslategrey&quot;, &quot;darkslategray&quot;);</span>
+<span class="fc" id="L174">        ALIASES.put(&quot;dimgrey&quot;, &quot;dimgray&quot;);</span>
+<span class="fc" id="L175">        ALIASES.put(&quot;lightgrey&quot;, &quot;lightgray&quot;);</span>
+<span class="fc" id="L176">        ALIASES.put(&quot;lightslategrey&quot;, &quot;lightslategray&quot;);</span>
+<span class="fc" id="L177">        ALIASES.put(&quot;slategrey&quot;, &quot;slategray&quot;);</span>
+<span class="fc" id="L178">    }</span>
+
+    /** Utility class: it is not meant to be instantiated. */
+    private CssColors() {
+    }
+
+    private static void add(String name, int rgb) {
+<span class="fc" id="L185">        NAMED.put(name, rgb);</span>
+<span class="fc" id="L186">    }</span>
+
+    /**
+     * Translates a CSS color name into a Color.
+     *
+     * @param color a CSS color name (in any case)
+     * @return the matching Color; black if the name is not a known CSS color
+     */
+    public static Color toColor(String color) {
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (color == null) {</span>
+<span class="nc" id="L196">            return Color.BLACK;</span>
+        }
+<span class="fc" id="L198">        String key = color.trim().toLowerCase();</span>
+<span class="pc bpc" id="L199" title="1 of 2 branches missed.">        if (ALIASES.containsKey(key)) {</span>
+<span class="nc" id="L200">            key = ALIASES.get(key);</span>
+        }
+<span class="fc" id="L202">        Integer rgb = NAMED.get(key);</span>
+<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        return rgb == null ? Color.BLACK : new Color(rgb);</span>
+    }
+
+    /**
+     * Returns n different CSS color names (the first ones of the catalogue).
+     * If n is bigger than the number of available colors, all of them are returned,
+     * so the length of the result can be smaller than n.
+     *
+     * @param n how many colors are needed (a value below 1 gives an empty array)
+     * @return an array of different color names, with length min(n, available colors)
+     */
+    public static String[] distinct(int n) {
+<span class="fc" id="L215">        List&lt;String&gt; names = new ArrayList&lt;&gt;(NAMED.keySet());</span>
+<span class="fc" id="L216">        int amount = Math.max(0, Math.min(n, names.size()));</span>
+<span class="fc" id="L217">        return names.subList(0, amount).toArray(new String[0]);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

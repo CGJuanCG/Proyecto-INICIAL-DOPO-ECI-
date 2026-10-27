@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlotMachineContest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Slot Machine - DOPO</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">SlotMachineContest.java</span></div><h1>SlotMachineContest.java</h1><pre class="source lang-java linenums">import java.util.ArrayList;
+
+/**
+ * Solves Problem I (Slot Machine) of the 2025 ICPC World Finals.
+ * SlotMachine is used only as the testing tool: SlotMachine(n), spin(wheel, steps)
+ * and distinctSymbols(); makeVisible() and makeInvisible() are used only to decide
+ * whether the run is shown on screen.
+ */
+<span class="fc" id="L9">public class SlotMachineContest {</span>
+
+    private static final int MIN_WHEELS = 3;
+    private static final int MAX_WHEELS = 50;
+
+    /**
+     * Wins the game on a random machine of n wheels and n symbols, keeping the
+     * machine invisible, and returns the actions that were needed.
+     *
+     * @param n number of wheels and symbols (3 to 50)
+     * @return an array of actions in the order they were played; each action is
+     *         {wheel, steps}. Empty if the machine was already winning.
+     * @throws IllegalArgumentException if n is outside the range 3..50
+     */
+    public static int[][] solve(int n) {
+<span class="fc" id="L24">        validarRango(n);</span>
+<span class="fc" id="L25">        SlotMachine machine = new SlotMachine(n);</span>
+<span class="fc" id="L26">        machine.makeInvisible();</span>
+<span class="fc" id="L27">        return solucion(machine, n);</span>
+    }
+
+    /**
+     * Wins the game on a random machine of n wheels and n symbols with the machine
+     * visible, so the whole run can be watched step by step.
+     *
+     * @param n number of wheels and symbols (3 to 50)
+     * @throws IllegalArgumentException if n is outside the range 3..50
+     */
+    public static void simulate(int n){
+<span class="fc" id="L38">        validarRango(n);</span>
+<span class="fc" id="L39">        SlotMachine machine = new SlotMachine(n);</span>
+<span class="fc" id="L40">        machine.makeVisible();</span>
+<span class="fc" id="L41">        solucion(machine, n);</span>
+<span class="fc" id="L42">    }</span>
+
+    /**
+     * Checks that n is a size the problem allows.
+     *
+     * @param n number of wheels and symbols
+     * @throws IllegalArgumentException if n is outside the range 3..50
+     */
+    private static void validarRango(int n) {
+<span class="pc bpc" id="L51" title="1 of 4 branches missed.">        if (n &lt; MIN_WHEELS || n &gt; MAX_WHEELS) {</span>
+<span class="fc" id="L52">            throw new IllegalArgumentException(</span>
+                &quot;El número de ruedas y símbolos debe estar entre &quot; + MIN_WHEELS
+                + &quot; y &quot; + MAX_WHEELS + &quot;, pero se recibió &quot; + n);
+        }
+<span class="fc" id="L56">    }</span>
+
+    /**
+     * Wins the game on the given machine, using only the number of distinct symbols
+     * shown after each action. The caller decides whether the machine is visible.
+     *
+     * The machine must have exactly n wheels and n symbols; this method cannot check
+     * that precondition, because it is only allowed to use spin and distinctSymbols.
+     *
+     * @param machine the machine to play on
+     * @param n number of wheels and symbols of that machine (3 to 50)
+     * @return the actions needed to win, in order; each action is {wheel, steps},
+     *         with the wheel from 1 to n and steps between -(n - 1) and n - 1, never
+     *         zero. Empty if the machine was already winning.
+     */
+    static int[][] solucion(SlotMachine machine, int n){
+<span class="fc" id="L72">        ArrayList&lt;int[]&gt; actions = new ArrayList&lt;int[]&gt;();</span>
+
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (machine.distinctSymbols() == 1) {</span>
+<span class="fc" id="L75">            return new int[0][];   // ya estaba ganada</span>
+        }
+
+        // Fase 1: que todas las ruedas muestren símbolos distintos.
+        // Cada rueda se prueba en sus n posiciones y se deja donde hay más símbolos
+        // distintos: esa posición no la ocupa ninguna otra rueda.
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (int wheel = 1; wheel &lt;= n; wheel++) {</span>
+<span class="fc" id="L82">            int[] distinctAt = new int[n];   // distinctAt[t] = símbolos distintos tras girar t posiciones</span>
+<span class="fc" id="L83">            distinctAt[0] = machine.distinctSymbols();</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            for (int t = 1; t &lt; n; t++) {</span>
+<span class="fc" id="L85">                machine.spin(wheel, 1);</span>
+<span class="fc" id="L86">                actions.add(new int[] {wheel, 1});</span>
+<span class="fc" id="L87">                distinctAt[t] = machine.distinctSymbols();</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">                if (distinctAt[t] == 1) {</span>
+<span class="nc" id="L89">                    return actions.toArray(new int[0][]);   // jackpot: terminamos</span>
+                }
+            }
+<span class="fc" id="L92">            int best = 0;</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            for (int t = 1; t &lt; n; t++) {</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                if (distinctAt[t] &gt; distinctAt[best]) {</span>
+<span class="fc" id="L95">                    best = t;</span>
+                }
+            }
+<span class="fc" id="L98">            int steps = (best + 1) % n;      // estamos en la posición n-1; hasta 'best' faltan best+1</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">            if (steps != 0) {</span>
+<span class="fc" id="L100">                machine.spin(wheel, steps);</span>
+<span class="fc" id="L101">                actions.add(new int[] {wheel, steps});</span>
+            }
+        }
+
+        // Fase 2: descubrir el orden de las ruedas.
+        // order[t] = rueda que está t posiciones después de la rueda 1.
+<span class="fc" id="L107">        int[] order = new int[n];</span>
+<span class="fc" id="L108">        boolean[] placed = new boolean[n + 1];   // placed[w] = ya sabemos dónde va la rueda w</span>
+<span class="fc" id="L109">        order[0] = 1;</span>
+<span class="fc" id="L110">        placed[1] = true;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">        for (int t = 0; t &lt; n - 2; t++) {</span>
+<span class="fc" id="L112">            int a = order[t];</span>
+<span class="fc" id="L113">            machine.spin(a, 1);                  // a avanza y choca con su vecina: baja a n-1</span>
+<span class="fc" id="L114">            actions.add(new int[] {a, 1});</span>
+<span class="fc" id="L115">            int found = -1;</span>
+<span class="fc bfc" id="L116" title="All 4 branches covered.">            for (int b = 1; b &lt;= n &amp;&amp; found == -1; b++) {</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">                if (!placed[b]) {</span>
+<span class="fc" id="L118">                    machine.spin(b, -1);      // b retrocede una posición (n-1 equivale a -1)</span>
+<span class="fc" id="L119">                    actions.add(new int[] {b, -1});</span>
+<span class="fc" id="L120">                    int distinct = machine.distinctSymbols();</span>
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">                    if (distinct == 1) {</span>
+<span class="nc" id="L122">                        return actions.toArray(new int[0][]);   // jackpot: terminamos</span>
+                    }
+<span class="fc bfc" id="L124" title="All 2 branches covered.">                    if (distinct == n) {</span>
+<span class="fc" id="L125">                        found = b;               // otra vez n distintos: b era la vecina de a</span>
+                    } else {
+<span class="fc" id="L127">                        machine.spin(b, 1);      // no era: deshacer y probar la siguiente</span>
+<span class="fc" id="L128">                        actions.add(new int[] {b, 1});</span>
+                    }
+                }
+            }
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">            if (found == -1) {</span>
+<span class="nc" id="L133">                throw new IllegalStateException(</span>
+                    &quot;No se encontró la rueda siguiente: ¿todas las ruedas tienen los mismos n símbolos en el mismo orden?&quot;);
+            }
+<span class="fc" id="L136">            machine.spin(found, 1);              // deshacer el movimiento de la vecina</span>
+<span class="fc" id="L137">            actions.add(new int[] {found, 1});</span>
+<span class="fc" id="L138">            machine.spin(a, -1);              // deshacer el movimiento de a</span>
+<span class="fc" id="L139">            actions.add(new int[] {a, -1});</span>
+<span class="fc" id="L140">            order[t + 1] = found;</span>
+<span class="fc" id="L141">            placed[found] = true;</span>
+        }
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        for (int wheel = 1; wheel &lt;= n; wheel++) {   // la última rueda es la única sin ubicar</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">            if (!placed[wheel]) {</span>
+<span class="fc" id="L145">                order[n - 1] = wheel;</span>
+            }
+        }
+
+        // Fase 3: alinear todas las ruedas.
+        // La rueda order[t] está t posiciones adelante de la rueda 1: retrocederla t
+        // posiciones (n - t) la deja igual a la rueda 1. La última acción da el jackpot.
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        for (int t = 1; t &lt; n; t++) {</span>
+<span class="fc" id="L153">            machine.spin(order[t], n - t);</span>
+<span class="fc" id="L154">            actions.add(new int[] {order[t], n - t});</span>
+        }
+<span class="fc" id="L156">        return actions.toArray(new int[0][]);</span>
+    
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
