@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Lazy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Slot Machine - DOPO</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Lazy.java</span></div><h1>Lazy.java</h1><pre class="source lang-java linenums">/**
+ * A lazy wheel. When it is asked to spin, it does not spin by a random amount:
+ * it just moves forward one place on the strip. Like any wheel, it does not
+ * move while it is locked.
+ *
+ * It is the kind of wheel proposed by the group for requirement 19.
+ *
+ * @author Juan Diego Castaño Parra - Juan Diego Carreño Gutierrez
+ * @version 21-10-2026
+ */
+public class Lazy extends Wheel
+{
+    /**
+     * Makes a lazy wheel that looks at the given strip.
+     *
+     * @param cinta the strip of symbols the wheel reads from
+     */
+    public Lazy(Cinta cinta)
+    {
+<span class="fc" id="L20">        super(cinta);</span>
+<span class="fc" id="L21">    }</span>
+
+    /**
+     * Moves forward just one place instead of spinning by a random amount.
+     * Since spin(Wheel) of a wheel ends up calling this method, a lazy wheel
+     * also moves just one place when the whole machine spins.
+     *
+     * @return true when the wheel moved, false when it is locked or the strip
+     *         is empty
+     */
+    @Override
+    public boolean spin()
+    {
+<span class="fc" id="L34">        return rotate(1);</span>
+    }
+
+    /**
+     * A lazy wheel has a gold frame, so it can be told apart on the screen.
+     *
+     * @return the CSS name of the color of the frame
+     */
+    @Override
+    protected String colorMarco()
+    {
+<span class="fc" id="L45">        return &quot;gold&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

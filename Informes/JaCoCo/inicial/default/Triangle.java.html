@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Triangle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Slot Machine - DOPO</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Triangle.java</span></div><h1>Triangle.java</h1><pre class="source lang-java linenums">import java.awt.*;
+import java.lang.Math;
+
+/**
+ * A triangle that can be manipulated and that draws itself on a canvas.
+ * 
+ * @author  Michael Kolling and David J. Barnes
+ * @version 1.0  (15 July 2000)
+ */
+
+public class Triangle{
+    
+<span class="fc" id="L13">    public static int VERTICES=3;</span>
+    
+    private int height;
+    private int width;
+    private int xPosition;
+    private int yPosition;
+    private String color;
+    private boolean isVisible;
+    private char direction;
+    
+    
+    
+
+
+    /**
+     * Create a new triangle at default position with default color.
+     */
+<span class="fc" id="L30">    public Triangle(int x, int y){</span>
+<span class="fc" id="L31">        height = 12;</span>
+<span class="fc" id="L32">        width = 12;</span>
+<span class="fc" id="L33">        this.xPosition = x;</span>
+<span class="fc" id="L34">        this.yPosition = y;</span>
+<span class="fc" id="L35">        color = &quot;black&quot;;</span>
+<span class="fc" id="L36">        isVisible = false;</span>
+<span class="fc" id="L37">        direction = 'S';</span>
+<span class="fc" id="L38">    } </span>
+    
+    public char getDirection(){
+<span class="nc" id="L41">        return direction;</span>
+    }
+    
+    
+    public void setCoordinates(int xPosition,int yPosition)
+    {
+<span class="nc" id="L47">        erase();</span>
+<span class="nc" id="L48">        this.xPosition = xPosition;</span>
+<span class="nc" id="L49">        this.yPosition = yPosition;</span>
+<span class="nc" id="L50">        draw();</span>
+<span class="nc" id="L51">    } </span>
+    
+    public int[] getCoordinates()
+    {
+        
+<span class="nc" id="L56">        return new int[]{xPosition, yPosition};</span>
+    }    
+    
+    /*
+     * Change the orientation of the triangle
+     */
+    
+    public void turn()
+    {
+<span class="nc" id="L65">        erase();</span>
+<span class="nc bnc" id="L66" title="All 5 branches missed.">        switch (direction){</span>
+<span class="nc" id="L67">            case 'S': direction = 'W'; break;</span>
+<span class="nc" id="L68">            case 'W': direction = 'N'; break;</span>
+<span class="nc" id="L69">            case 'N' : direction = 'E'; break;</span>
+<span class="nc" id="L70">            case 'E' : direction = 'S'; break;</span>
+        }
+<span class="nc" id="L72">        draw();</span>
+<span class="nc" id="L73">    }</span>
+    
+        
+    public int area(){
+<span class="nc" id="L77">        return (height*width)/2;</span>
+        
+    }
+    
+    public void equilateral(){
+<span class="nc" id="L82">        int area = area();</span>
+<span class="nc" id="L83">        double s = Math.sqrt((4*area)/Math.sqrt(3));</span>
+<span class="nc" id="L84">        changeSize((int) (Math.sqrt(3.0)/2*s),(int)s);</span>
+        
+<span class="nc" id="L86">    }</span>
+    
+    
+    public void walk(int times){
+        int i;
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        for (i=0;i&lt;Math.abs(times);i++){</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (times&gt;0){</span>
+<span class="nc" id="L93">                moveRight();</span>
+<span class="nc" id="L94">                moveDown();</span>
+            }
+<span class="nc bnc" id="L96" title="All 2 branches missed.">            else if(times&lt;0){</span>
+<span class="nc" id="L97">                moveLeft();</span>
+<span class="nc" id="L98">                moveDown();</span>
+            }    
+        }
+<span class="nc" id="L101">        }</span>
+    
+        
+<span class="nc" id="L104">    public Triangle(String color, int width, int height){</span>
+<span class="nc" id="L105">        this.color = color;</span>
+<span class="nc" id="L106">        this.width = width;</span>
+<span class="nc" id="L107">        this.height = height;</span>
+<span class="nc" id="L108">        xPosition = 140;</span>
+<span class="nc" id="L109">        yPosition = 15;</span>
+<span class="nc" id="L110">        isVisible = false;</span>
+<span class="nc" id="L111">    }    </span>
+    
+    public double perimetro(){
+<span class="nc" id="L114">        int base = width/2;</span>
+<span class="nc" id="L115">        double hipotenusa = Math.sqrt((base*base)+(height*height));</span>
+<span class="nc" id="L116">        double perimetro = width + hipotenusa*2;</span>
+<span class="nc" id="L117">        return perimetro;</span>
+    
+    }
+    
+    
+    /**
+     * Make this triangle visible. If it was already visible, do nothing.
+     */
+    public void makeVisible(){
+<span class="nc" id="L126">        isVisible = true;</span>
+<span class="nc" id="L127">        draw();</span>
+<span class="nc" id="L128">    }</span>
+    
+    /**
+     * Make this triangle invisible. If it was already invisible, do nothing.
+     */
+    public void makeInvisible(){
+<span class="fc" id="L134">        erase();</span>
+<span class="fc" id="L135">        isVisible = false;</span>
+<span class="fc" id="L136">    }</span>
+    
+    /**
+     * Move the triangle a few pixels to the right.
+     */
+    public void moveRight(){
+<span class="nc" id="L142">        moveHorizontal(20);</span>
+<span class="nc" id="L143">    }</span>
+
+    /**
+     * Move the triangle a few pixels to the left.
+     */
+    public void moveLeft(){
+<span class="nc" id="L149">        moveHorizontal(-20);</span>
+<span class="nc" id="L150">    }</span>
+
+    /**
+     * Move the triangle a few pixels up.
+     */
+    public void moveUp(){
+<span class="nc" id="L156">        moveVertical(-20);</span>
+<span class="nc" id="L157">    }</span>
+
+    /**
+     * Move the triangle a few pixels down.
+     */
+    public void moveDown(){
+<span class="nc" id="L163">        moveVertical(20);</span>
+<span class="nc" id="L164">    }</span>
+
+    /**
+     * Move the triangle horizontally.
+     * @param distance the desired distance in pixels
+     */
+    public void moveHorizontal(int distance){
+<span class="nc" id="L171">        erase();</span>
+<span class="nc" id="L172">        xPosition += distance;</span>
+<span class="nc" id="L173">        draw();</span>
+<span class="nc" id="L174">    }</span>
+
+    /**
+     * Move the triangle vertically.
+     * @param distance the desired distance in pixels
+     */
+    public void moveVertical(int distance){
+<span class="nc" id="L181">        erase();</span>
+<span class="nc" id="L182">        yPosition += distance;</span>
+<span class="nc" id="L183">        draw();</span>
+<span class="nc" id="L184">    }</span>
+
+    /**
+     * Slowly move the triangle horizontally.
+     * @param distance the desired distance in pixels
+     */
+    public void slowMoveHorizontal(int distance){
+        int delta;
+
+<span class="nc bnc" id="L193" title="All 2 branches missed.">        if(distance &lt; 0) {</span>
+<span class="nc" id="L194">            delta = -1;</span>
+<span class="nc" id="L195">            distance = -distance;</span>
+        } else {
+<span class="nc" id="L197">            delta = 1;</span>
+        }
+
+<span class="nc bnc" id="L200" title="All 2 branches missed.">        for(int i = 0; i &lt; distance; i++){</span>
+<span class="nc" id="L201">            xPosition += delta;</span>
+<span class="nc" id="L202">            draw();</span>
+        }
+<span class="nc" id="L204">    }</span>
+
+    /**
+     * Slowly move the triangle vertically.
+     * @param distance the desired distance in pixels
+     */
+    public void slowMoveVertical(int distance){
+        int delta;
+
+<span class="nc bnc" id="L213" title="All 2 branches missed.">        if(distance &lt; 0) {</span>
+<span class="nc" id="L214">            delta = -1;</span>
+<span class="nc" id="L215">            distance = -distance;</span>
+        } else {
+<span class="nc" id="L217">            delta = 1;</span>
+        }
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        for(int i = 0; i &lt; distance; i++){</span>
+<span class="nc" id="L221">            yPosition += delta;</span>
+<span class="nc" id="L222">            draw();</span>
+        }
+<span class="nc" id="L224">    }</span>
+
+    /**
+     * Change the size to the new size
+     * @param newHeight the new height in pixels. newHeight must be &gt;=0.
+     * @param newWidht the new width in pixels. newWidht must be &gt;=0.
+     */
+    public void changeSize(int newHeight, int newWidth) {
+<span class="nc" id="L232">        erase();</span>
+<span class="nc" id="L233">        height = newHeight;</span>
+<span class="nc" id="L234">        width = newWidth;</span>
+<span class="nc" id="L235">        draw();</span>
+<span class="nc" id="L236">    }</span>
+    
+    /**
+     * Change the color. 
+     * @param color the new color. Valid colors are &quot;red&quot;, &quot;yellow&quot;, &quot;blue&quot;, &quot;green&quot;,
+     * &quot;magenta&quot; and &quot;black&quot;.
+     */
+    public void changeColor(String newColor){
+<span class="nc" id="L244">        color = newColor;</span>
+<span class="nc" id="L245">        draw();</span>
+<span class="nc" id="L246">    }</span>
+
+    
+    /**
+     * Creation of the method draw with the direction implemented
+     */
+    private void draw()
+{
+<span class="nc bnc" id="L254" title="All 2 branches missed.">    if(isVisible){</span>
+<span class="nc" id="L255">        Canvas canvas = Canvas.getCanvas();</span>
+        int[] xpoints;
+        int[] ypoints;
+<span class="nc bnc" id="L258" title="All 5 branches missed.">        switch (direction){</span>
+            case 'N':
+<span class="nc" id="L260">                xpoints = new int[]{ xPosition, xPosition + width/2, xPosition - width/2 };</span>
+<span class="nc" id="L261">                ypoints = new int[]{ yPosition - height/2, yPosition + height/2, yPosition + height/2 };</span>
+<span class="nc" id="L262">                break;</span>
+            case 'S':
+<span class="nc" id="L264">                xpoints = new int[]{ xPosition, xPosition + width/2, xPosition - width/2 };</span>
+<span class="nc" id="L265">                ypoints = new int[]{ yPosition + height/2, yPosition - height/2, yPosition - height/2 };</span>
+<span class="nc" id="L266">                break;</span>
+            case 'E':
+<span class="nc" id="L268">                xpoints = new int[]{ xPosition + height/2, xPosition - height/2, xPosition - height/2 };</span>
+<span class="nc" id="L269">                ypoints = new int[]{ yPosition, yPosition - width/2, yPosition + width/2 };</span>
+<span class="nc" id="L270">                break;</span>
+            case 'W':
+<span class="nc" id="L272">                xpoints = new int[]{ xPosition - height/2, xPosition + height/2, xPosition + height/2 };</span>
+<span class="nc" id="L273">                ypoints = new int[]{ yPosition, yPosition - width/2, yPosition + width/2 };</span>
+<span class="nc" id="L274">                break;</span>
+            default:
+<span class="nc" id="L276">                xpoints = new int[]{ xPosition, xPosition + width/2, xPosition - width/2 };</span>
+<span class="nc" id="L277">                ypoints = new int[]{ yPosition - height/2, yPosition + height/2, yPosition + height/2 };</span>
+        };
+<span class="nc" id="L279">        canvas.draw(this, color, new Polygon(xpoints, ypoints, 3));</span>
+<span class="nc" id="L280">        canvas.wait(10);</span>
+    }
+<span class="nc" id="L282">}</span>
+
+    /*
+     * Erase the triangle on screen.
+     */
+    private void erase(){
+<span class="pc bpc" id="L288" title="1 of 2 branches missed.">        if(isVisible) {</span>
+<span class="nc" id="L289">            Canvas canvas = Canvas.getCanvas();</span>
+<span class="nc" id="L290">            canvas.erase(this);</span>
+        }
+<span class="fc" id="L292">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
