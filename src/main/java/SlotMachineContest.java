@@ -75,9 +75,28 @@ public class SlotMachineContest {
             return new int[0][];   // ya estaba ganada
         }
 
-        // Fase 1: que todas las ruedas muestren símbolos distintos.
-        // Cada rueda se prueba en sus n posiciones y se deja donde hay más símbolos
-        // distintos: esa posición no la ocupa ninguna otra rueda.
+        boolean jackpot = separarRuedas(machine, n, actions);
+        if (!jackpot) {
+            int[] order = descubrirOrden(machine, n, actions);
+            if (order != null) {
+                alinearRuedas(machine, n, order, actions);
+            }
+        }
+        return actions.toArray(new int[0][]);
+    }
+
+    /**
+     * Phase 1: leaves every wheel showing a different symbol. Each wheel is tried
+     * in its n positions and left where the most distinct symbols show: that
+     * position is not taken by any other wheel.
+     *
+     * @param machine the machine to play on
+     * @param n number of wheels and symbols of that machine
+     * @param actions the list where every action played is added
+     * @return true when the jackpot came up along the way, so there is nothing
+     *         left to do
+     */
+    private static boolean separarRuedas(SlotMachine machine, int n, ArrayList<int[]> actions) {
         for (int wheel = 1; wheel <= n; wheel++) {
             int[] distinctAt = new int[n];   // distinctAt[t] = símbolos distintos tras girar t posiciones
             distinctAt[0] = machine.distinctSymbols();
@@ -86,7 +105,7 @@ public class SlotMachineContest {
                 actions.add(new int[] {wheel, 1});
                 distinctAt[t] = machine.distinctSymbols();
                 if (distinctAt[t] == 1) {
-                    return actions.toArray(new int[0][]);   // jackpot: terminamos
+                    return true;   // jackpot: terminamos
                 }
             }
             int best = 0;
@@ -101,9 +120,21 @@ public class SlotMachineContest {
                 actions.add(new int[] {wheel, steps});
             }
         }
+        return false;
+    }
 
-        // Fase 2: descubrir el orden de las ruedas.
-        // order[t] = rueda que está t posiciones después de la rueda 1.
+    /**
+     * Phase 2: finds out the order of the wheels. It needs every wheel showing a
+     * different symbol, which is how phase 1 leaves them.
+     *
+     * @param machine the machine to play on
+     * @param n number of wheels and symbols of that machine
+     * @param actions the list where every action played is added
+     * @return the order found, where order[t] is the wheel that sits t positions
+     *         after wheel 1, or null when the jackpot came up along the way
+     * @throws IllegalStateException if the next wheel cannot be found
+     */
+    private static int[] descubrirOrden(SlotMachine machine, int n, ArrayList<int[]> actions) {
         int[] order = new int[n];
         boolean[] placed = new boolean[n + 1];   // placed[w] = ya sabemos dónde va la rueda w
         order[0] = 1;
@@ -119,7 +150,7 @@ public class SlotMachineContest {
                     actions.add(new int[] {b, -1});
                     int distinct = machine.distinctSymbols();
                     if (distinct == 1) {
-                        return actions.toArray(new int[0][]);   // jackpot: terminamos
+                        return null;   // jackpot: terminamos
                     }
                     if (distinct == n) {
                         found = b;               // otra vez n distintos: b era la vecina de a
@@ -145,15 +176,23 @@ public class SlotMachineContest {
                 order[n - 1] = wheel;
             }
         }
+        return order;
+    }
 
-        // Fase 3: alinear todas las ruedas.
-        // La rueda order[t] está t posiciones adelante de la rueda 1: retrocederla t
-        // posiciones (n - t) la deja igual a la rueda 1. La última acción da el jackpot.
+    /**
+     * Phase 3: lines up all the wheels. Wheel order[t] sits t positions ahead of
+     * wheel 1, so moving it back t positions (n - t) leaves it equal to wheel 1.
+     * The last action gives the jackpot.
+     *
+     * @param machine the machine to play on
+     * @param n number of wheels and symbols of that machine
+     * @param order the order found in phase 2
+     * @param actions the list where every action played is added
+     */
+    private static void alinearRuedas(SlotMachine machine, int n, int[] order, ArrayList<int[]> actions) {
         for (int t = 1; t < n; t++) {
             machine.spin(order[t], n - t);
             actions.add(new int[] {order[t], n - t});
         }
-        return actions.toArray(new int[0][]);
-    
     }
 }
